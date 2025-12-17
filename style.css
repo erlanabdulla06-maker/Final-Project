@@ -1,0 +1,52 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  margin-left: 15px;
+  text-decoration: none;
+}
+
+.search-box {
+  margin: 20px 0;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.auth {
+  max-width: 300px;
+  margin: auto;
+}
+
+input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px;
+}
+
+span {
+  color: blue;
+  cursor: pointer;
+}

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Byte. - Online Tech Market</title>
+    <!-- Icon Library (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* --- Global Reset & Base (Clean Code) --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+        }
+
+        /* Central container for all sections */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Default flex settings for header bars */
+        .top-bar.container,
+        .main-nav .container {
+            display: flex; 
+            align-items: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        /* --- Header Styling (Byte. Design) --- */
+        .main-header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .top-bar {
+            padding: 15px 0;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: #007bff; 
+            letter-spacing: -1px;
+        }
+
+        /* Combined Search Bar & Category Select */
+        .search-box {
+            display: flex;
+            gap: 10px; 
+            max-width: 600px; 
+            flex-grow: 1; 
+            align-items: center;
+        }
+        
+        .search-box input#search {
+            flex-grow: 1;
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .search-box select#category {
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: white;
+            height: 40px; 
+            min-width: 100px;
+        }
+
+        /* Utility Icons (Cart, Login/Auth) */
+        .utility-icons {
+            display: flex;
+            gap: 15px; 
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: #555;
+            transition: transform 0.2s ease-out, color 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item:hover {
+            color: #007bff;
+            transform: translateY(-2px);
+        }
+
+        /* Message Box Styling (Replaces alert()) */
+        #message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745; /* Success color */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            font-weight: bold;
+        }
+        #message-box.error {
+            background-color: #dc3545; /* Error color */
+        }
+        
+        /* Product Grid Styles */
+        main {
+            padding: 40px 0;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+            overflow: hidden; /* To contain image placeholder */
+        }
+
+        .card:hover {
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* NEW: Image Placeholder Style */
+        .card-image-placeholder {
+            height: 150px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .card h4 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #343a40;
+        }
+
+        .card p {
+            margin-bottom: 5px;
+            color: #6c757d;
+        }
+
+        /* OLD: Removed styling from p:last-of-type to use dedicated price container */
+        .card p:last-of-type {
+            font-weight: normal; 
+            font-size: 16px;
+            color: #6c757d;
+        }
+        
+        /* NEW: Price Container for Discount Line */
+        .price-container {
+            margin-top: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: baseline;
+        }
+
+        .original-price {
+            color: #dc3545; /* Red for strike-through price */
+            text-decoration: line-through;
+            font-size: 14px;
+            margin-right: 10px;
+            font-weight: normal;
+        }
+
+        .current-price {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .card button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .card button:hover {
+            background-color: #1e7e34;
+        }
+        
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .top-bar.container {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+            .logo {
+                flex-basis: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .search-box {
+                order: 3;
+                flex-basis: 100%;
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
+            .utility-icons {
+                order: 2;
+                gap: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Message Box -->
+    <div id="message-box"></div>
+
+    <!-- Header Section -->
+    <header class="main-header">
+        <div class="top-bar container">
+            <!-- Logo/Branding -->
+            <a href="index.html" class="logo">Byte.</a>
+            
+            <!-- Combined Search Bar and Category Select -->
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search product...">
+                <select id="category">
+                    <option value="">All</option>
+                    <option value="Discount">Discounts</option> <!-- ADDED Discount Category -->
+                    <option value="Laptop">Laptop</option>
+                    <option value="Phone">Phone</option>
+                </select>
+            </div>
+            
+            <!-- Utility Icons (Login moved to far right, Discounts removed) -->
+            <div class="utility-icons">
+                <!-- Cart Link (Moved to first) -->
+                <a href="cart.html" class="nav-item cart-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Cart</span>
+                    <!-- Cart badge is currently static but can be updated by script.js -->
+                </a>
+                <!-- Login Link (Moved to far right) -->
+                <a href="auth.html" class="nav-item nav-sign-in">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Login</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area: Product Grid -->
+    <main>
+        <div class="container">
+            <div id="products" class="products">
+                <!-- Products rendered by script.js -->
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        /* ================= UTILITY & MESSAGE BOX ================= */
+        const messageBox = document.getElementById("message-box");
+        let messageTimeout;
+
+        /**
+         * Displays a custom message box instead of using alert().
+         * @param {string} message The message content.
+         * @param {string} type 'success' or 'error'.
+         */
+        function showMessage(message, type = 'success') {
+            clearTimeout(messageTimeout);
+            messageBox.className = '';
+            messageBox.textContent = message;
+            messageBox.classList.add(type);
+            messageBox.style.opacity = '1';
+
+            messageTimeout = setTimeout(() => {
+                messageBox.style.opacity = '0';
+            }, 3000); // Message disappears after 3 seconds
+        }
+
+
+        /* ================= PRODUCTS DATA & RENDERING ================= */
+
+        const products = [
+            // Updated product data to include originalPrice for discounts
+            { id: 1, name: "MacBook Pro", category: "Laptop", price: 1200 },
+            { id: 2, name: "Asus ZenBook", category: "Laptop", price: 850, originalPrice: 900 }, // Discounted
+            { id: 3, name: "iPhone 14", category: "Phone", price: 800 },
+            { id: 4, name: "Samsung Galaxy S23", category: "Phone", price: 650, originalPrice: 700 } // Discounted
+        ];
+
+        const productsDiv = document.getElementById("products");
+
+        function renderProducts(list) {
+            if (!productsDiv) return;
+            productsDiv.innerHTML = "";
+            
+            if (list.length === 0) {
+                productsDiv.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #dc3545;">No products found matching your criteria.</p>`;
+                return;
+            }
+
+            list.forEach(p => {
+                const isDiscounted = p.originalPrice && p.originalPrice > p.price;
+                
+                // Construct the price HTML with or without the crossed-out original price
+                const priceHtml = isDiscounted 
+                    ? `<span class="original-price">${p.originalPrice}$</span><span class="current-price">${p.price}$</span>`
+                    : `<span class="current-price">${p.price}$</span>`;
+
+                productsDiv.innerHTML += `
+                    <div class="card">
+                        <!-- Space for Picture/Asset -->
+                        <div class="card-image-placeholder">
+                            ${p.name} Image Placeholder
+                        </div>
+                        
+                        <h4>${p.name}</h4>
+                        <p>Category: ${p.category}</p>
+                        
+                        <!-- Discount Line/Price Display -->
+                        <div class="price-container">
+                            ${priceHtml}
+                        </div>
+                        
+                        <button onclick="addToCart(${p.id})">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        /* ================= FILTERING AND INITIAL LOAD ================= */
+
+        function filterProducts() {
+            const searchInput = document.getElementById("search");
+            const categorySelect = document.getElementById("category");
+
+            if (!searchInput || !categorySelect) return;
+
+            const search = searchInput.value.toLowerCase();
+            const category = categorySelect.value;
+
+            const filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(search);
+                const isDiscounted = p.originalPrice && p.originalPrice > p.price;
+
+                if (category === "Discount") {
+                    // If 'Discount' is selected, show only discounted items that match search
+                    return matchesSearch && isDiscounted;
+                } else {
+                    // Otherwise, apply standard category and search filtering
+                    return matchesSearch && (category === "" || p.category === category);
+                }
+            });
+
+            renderProducts(filtered);
+        }
+
+        // Add event listeners when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (productsDiv) renderProducts(products); // Initial rendering
+            document.getElementById("search")?.addEventListener("input", filterProducts);
+            document.getElementById("category")?.addEventListener("change", filterProducts);
+        });
+
+        /* ================= CART FUNCTIONALITY ================= */
+
+        function addToCart(id) {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const productToAdd = products.find(p => p.id === id);
+
+            if (productToAdd) {
+                cart.push(productToAdd);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                showMessage(`Added ${productToAdd.name} to cart!`, 'success');
+            } else {
+                showMessage("Error: Product not found.", 'error');
+            }
+        }
+        
+        // Note: The rest of the JS logic (buy, toggleAuth, submitAuth, logout, profile) 
+        // belongs in their respective files (cart.html, auth.html, profile.html) 
+        // and is omitted here for the requested index.html self-contained file.
+    </script>
+</body>
+</html>
