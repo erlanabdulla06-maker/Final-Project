@@ -6,14 +6,10 @@
     <title>Byte. - Online Tech Market</title>
     <!-- Icon Library (Font Awesome) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <style>
         /* --- Global Reset & Base (Clean Code) --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,7 +28,7 @@
         /* Default flex settings for header bars */
         .top-bar.container,
         .main-nav .container {
-            display: flex; 
+            display: flex;
             align-items: center;
         }
 
@@ -57,19 +53,19 @@
         .logo {
             font-size: 28px;
             font-weight: 900;
-            color: #007bff; 
+            color: #007bff;
             letter-spacing: -1px;
         }
 
         /* Combined Search Bar & Category Select */
         .search-box {
             display: flex;
-            gap: 10px; 
-            max-width: 600px; 
-            flex-grow: 1; 
+            gap: 10px;
+            max-width: 600px;
+            flex-grow: 1;
             align-items: center;
         }
-        
+
         .search-box input#search {
             flex-grow: 1;
             width: 100%;
@@ -78,21 +74,21 @@
             border-radius: 20px;
             font-size: 14px;
         }
-        
+
         .search-box select#category {
             padding: 10px 15px;
             border: 1px solid #ced4da;
             border-radius: 20px;
             font-size: 14px;
             background-color: white;
-            height: 40px; 
-            min-width: 100px;
+            height: 40px;
+            min-width: 140px;
         }
 
         /* Utility Icons (Cart, Login/Auth) */
         .utility-icons {
             display: flex;
-            gap: 15px; 
+            gap: 15px;
             align-items: center;
         }
 
@@ -103,6 +99,8 @@
             font-size: 12px;
             color: #555;
             transition: transform 0.2s ease-out, color 0.3s;
+            position: relative;
+            min-width: 52px;
         }
 
         .nav-item i {
@@ -115,12 +113,30 @@
             transform: translateY(-2px);
         }
 
+        /* Cart counter badge */
+        .cart-badge{
+            position:absolute;
+            top:-6px;
+            right:-10px;
+            min-width:18px;
+            height:18px;
+            padding:0 6px;
+            border-radius:999px;
+            background:#dc3545;
+            color:#fff;
+            font-size:11px;
+            font-weight:900;
+            display:none;
+            align-items:center;
+            justify-content:center;
+        }
+
         /* Message Box Styling (Replaces alert()) */
         #message-box {
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: #28a745; /* Success color */
+            background-color: #28a745;
             color: white;
             padding: 15px 25px;
             border-radius: 8px;
@@ -130,14 +146,46 @@
             transition: opacity 0.3s ease-in-out;
             font-weight: bold;
         }
-        #message-box.error {
-            background-color: #dc3545; /* Error color */
+        #message-box.error { background-color: #dc3545; }
+
+        /* ===== HERO TITLE ===== */
+        .hero { padding: 28px 0 0; }
+        .hero-box {
+            background: #ffffff;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border-radius: 10px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 18px;
         }
-        
+        .hero-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #343a40;
+        }
+        .hero-subtitle {
+            margin-top: 4px;
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .hero-badge {
+            background: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+            border: 1px solid rgba(0, 123, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-weight: 800;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
         /* Product Grid Styles */
-        main {
-            padding: 40px 0;
-        }
+        main { padding: 22px 0 40px; }
 
         .products {
             display: grid;
@@ -151,26 +199,51 @@
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s ease;
-            overflow: hidden; /* To contain image placeholder */
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-5px); 
+            transform: translateY(-5px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* NEW: Image Placeholder Style */
-        .card-image-placeholder {
+        .card-image {
             height: 150px;
             background-color: #e9ecef;
             border-radius: 6px;
             margin-bottom: 15px;
+            overflow: hidden;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        
+        .card-image {
+            height: 150px;
+            background-color: #ffffff;      /* makes it clean */
+            border: 1px solid #e9ecef;      /* light border */
+            border-radius: 6px;
+            margin-bottom: 15px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 10px;                  /* space around image */
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;            /* FIX: no ugly crop */
+            display: block;
+        }
+        
+        .img-fallback {
             font-size: 14px;
             color: #6c757d;
             font-weight: 500;
+            padding: 10px;
+            text-align:center;
         }
 
         .card h4 {
@@ -184,14 +257,6 @@
             color: #6c757d;
         }
 
-        /* OLD: Removed styling from p:last-of-type to use dedicated price container */
-        .card p:last-of-type {
-            font-weight: normal; 
-            font-size: 16px;
-            color: #6c757d;
-        }
-        
-        /* NEW: Price Container for Discount Line */
         .price-container {
             margin-top: 10px;
             margin-bottom: 15px;
@@ -200,7 +265,7 @@
         }
 
         .original-price {
-            color: #dc3545; /* Red for strike-through price */
+            color: #dc3545;
             text-decoration: line-through;
             font-size: 14px;
             margin-right: 10px;
@@ -224,11 +289,53 @@
             transition: background-color 0.3s;
             width: 100%;
         }
+        .card button:hover { background-color: #1e7e34; }
 
-        .card button:hover {
-            background-color: #1e7e34;
+        .details-link{
+            display:block;
+            text-align:center;
+            margin-top:10px;
+            font-size:13px;
+            font-weight:600;
+            color:#007bff;
         }
-        
+        .details-link:hover{ text-decoration: underline; }
+
+        /* ===== FOOTER ===== */
+        footer {
+            margin-top: 30px;
+            background: #ffffff;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 -2px 6px rgba(0,0,0,0.03);
+        }
+        .footer-inner {
+            padding: 28px 0;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 22px;
+        }
+        .footer-title {
+            font-weight: 900;
+            color: #343a40;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .footer-text, .footer-link {
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .footer-link { display:block; margin: 6px 0; }
+        .footer-link:hover { color:#007bff; }
+
+        .footer-bottom{
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding: 14px 0;
+            color:#6c757d;
+            font-size: 13px;
+            text-align:center;
+        }
+
         /* Mobile adjustments */
         @media (max-width: 768px) {
             .top-bar.container {
@@ -248,93 +355,194 @@
                 max-width: 100%;
                 margin-bottom: 10px;
             }
-            .utility-icons {
-                order: 2;
-                gap: 10px;
-            }
-        }
+            .utility-icons { order: 2; gap: 10px; }
 
+            .hero-box { flex-direction: column; align-items: flex-start; }
+            .footer-inner { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Dynamic Message Box -->
     <div id="message-box"></div>
 
-    <!-- Header Section -->
     <header class="main-header">
         <div class="top-bar container">
-            <!-- Logo/Branding -->
             <a href="index.html" class="logo">Byte.</a>
-            
-            <!-- Combined Search Bar and Category Select -->
+
             <div class="search-box">
                 <input type="text" id="search" placeholder="Search product...">
                 <select id="category">
                     <option value="">All</option>
-                    <option value="Discount">Discounts</option> <!-- ADDED Discount Category -->
+                    <option value="Discount">Discounts</option>
                     <option value="Laptop">Laptop</option>
                     <option value="Phone">Phone</option>
+                    <option value="Tablet">Tablet</option>
+                    <option value="Monitor">Monitor</option>
+                    <option value="Headphones">Headphones</option>
+                    <option value="Keyboard">Keyboard</option>
+                    <option value="Mouse">Mouse</option>
+                    <option value="Console">Console</option>
+                    <option value="Smartwatch">Smartwatch</option>
+                    <option value="Accessories">Accessories</option>
                 </select>
             </div>
-            
-            <!-- Utility Icons (Login moved to far right, Discounts removed) -->
+
             <div class="utility-icons">
-                <!-- Cart Link (Moved to first) -->
                 <a href="cart.html" class="nav-item cart-item">
                     <i class="fas fa-shopping-cart"></i>
                     <span>Cart</span>
-                    <!-- Cart badge is currently static but can be updated by script.js -->
+                    <span id="cart-count" class="cart-badge">0</span>
                 </a>
-                <!-- Login Link (Moved to far right) -->
+
                 <a href="auth.html" class="nav-item nav-sign-in">
                     <i class="fas fa-user-circle"></i>
-                    <span>Login</span>
+                    <span id="loginText">Login</span>
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area: Product Grid -->
-    <main>
+    <section class="hero">
         <div class="container">
-            <div id="products" class="products">
-                <!-- Products rendered by script.js -->
+            <div class="hero-box">
+                <div>
+                    <div class="hero-title">With Byte, everything becomes “byter” — faster, simpler, easier.</div>
+                    <div class="hero-subtitle">Find tech, compare prices, grab discounts, and checkout in minutes.</div>
+                </div>
+                <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Smart Tech Deals</div>
             </div>
         </div>
+    </section>
+
+    <main>
+        <div class="container">
+            <div id="products" class="products"></div>
+        </div>
     </main>
-    
+
+    <footer>
+        <div class="container">
+            <div class="footer-inner">
+                <div>
+                    <div class="footer-title">About Byte.</div>
+                    <div class="footer-text">
+                        Byte. is an online tech market demo project. We help users discover laptops, phones, and accessories
+                        with a clean UI, category filtering, discounts, and a simple cart experience.
+                    </div>
+                </div>
+
+                <div>
+                    <div class="footer-title">Contact</div>
+                    <div class="footer-text">
+                        <div><i class="fa-solid fa-envelope"></i> support@byte-market.com</div>
+                        <div style="margin-top:6px;"><i class="fa-solid fa-phone"></i> +7 (777) 777-77-77</div>
+                        <div style="margin-top:6px;"><i class="fa-solid fa-location-dot"></i> Almaty, Kazakhstan</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="footer-title">Links</div>
+                    <a class="footer-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+                    <a class="footer-link" href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+                    <a class="footer-link" href="profile.html"><i class="fa-solid fa-id-card"></i> Profile</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                © <span id="year"></span> Byte. Online Tech Market — Demo project
+            </div>
+        </div>
+    </footer>
+
     <script>
         /* ================= UTILITY & MESSAGE BOX ================= */
         const messageBox = document.getElementById("message-box");
         let messageTimeout;
 
-        /**
-         * Displays a custom message box instead of using alert().
-         * @param {string} message The message content.
-         * @param {string} type 'success' or 'error'.
-         */
         function showMessage(message, type = 'success') {
             clearTimeout(messageTimeout);
             messageBox.className = '';
             messageBox.textContent = message;
             messageBox.classList.add(type);
             messageBox.style.opacity = '1';
-
-            messageTimeout = setTimeout(() => {
-                messageBox.style.opacity = '0';
-            }, 3000); // Message disappears after 3 seconds
+            messageTimeout = setTimeout(() => { messageBox.style.opacity = '0'; }, 2500);
         }
 
+        /* ================= CART BADGE ================= */
+        const cartCountEl = document.getElementById("cart-count");
 
-        /* ================= PRODUCTS DATA & RENDERING ================= */
+        function getCart() {
+            const raw = localStorage.getItem("cart");
+            try {
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+            } catch {
+                return [];
+            }
+        }
 
+        function setCart(cart) {
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartBadge();
+        }
+
+        function updateCartBadge() {
+            if (!cartCountEl) return;
+            const count = getCart().length;
+            cartCountEl.textContent = count;
+            cartCountEl.style.display = count > 0 ? "inline-flex" : "none";
+        }
+
+        /* ================= USER AUTH DISPLAY ================= */
+        function updateLoginUI(){
+            const loginSpan = document.getElementById("loginText");
+            const loginAnchor = document.querySelector(".nav-sign-in");
+
+            const logged = localStorage.getItem("logged") === "true";
+            const user = JSON.parse(localStorage.getItem("user") || "null");
+            const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+            const email = currentUser?.email || user?.email;
+
+            if (logged && email) {
+                loginSpan.innerText = email;
+                loginAnchor.href = "profile.html";
+            } else {
+                loginSpan.innerText = "Login";
+                loginAnchor.href = "auth.html";
+            }
+        }
+
+        /* ================= PRODUCTS ================= */
         const products = [
-            // Updated product data to include originalPrice for discounts
-            { id: 1, name: "MacBook Pro", category: "Laptop", price: 1200 },
-            { id: 2, name: "Asus ZenBook", category: "Laptop", price: 850, originalPrice: 900 }, // Discounted
-            { id: 3, name: "iPhone 14", category: "Phone", price: 800 },
-            { id: 4, name: "Samsung Galaxy S23", category: "Phone", price: 650, originalPrice: 700 } // Discounted
+            { id: 1, name: "MacBook Pro 14", category: "Laptop", price: 1200, img: "images/macbook.jpg", detailsPage: "asset-1.html" },
+            { id: 2, name: "Asus ZenBook 14", category: "Laptop", price: 850, originalPrice: 900, img: "images/zenbook.webp", detailsPage: "asset-2.html" },
+            { id: 3, name: "Lenovo Legion 5", category: "Laptop", price: 1100, img: "images/legion.webp" },
+
+            { id: 4, name: "iPhone 17", category: "Phone", price: 800, img: "images/iphone17.png" },
+            { id: 5, name: "Samsung Galaxy S23", category: "Phone", price: 650, originalPrice: 700, img: "images/s23.jpeg", detailsPage: "asset-3.html" },
+            { id: 6, name: "Google Pixel 10", category: "Phone", price: 720, img: "images/pixel10.jpg" },
+
+            { id: 7, name: "iPad Air 13", category: "Tablet", price: 560, img: "images/ipadair13.webp" },
+            { id: 8, name: "Galaxy Tab S11", category: "Tablet", price: 630, originalPrice: 690, img: "images/tabs11.webp" },
+
+            { id: 9, name: "LG UltraGear 27''", category: "Monitor", price: 290, img: "images/ultragear.jpg" },
+            { id: 10, name: "Dell 24'' IPS", category: "Monitor", price: 170, originalPrice: 200, img: "images/dell24.webp" },
+
+            { id: 11, name: "Sony WH-1000XM5", category: "Headphones", price: 320, img: "images/sonyxm5.webp" },
+            { id: 12, name: "AirPods Pro 2", category: "Headphones", price: 210, img: "images/airpodspro2.jpeg" },
+
+            { id: 13, name: "Logitech MX Keys", category: "Keyboard", price: 95, img: "images/mxkeys.avif" },
+            { id: 14, name: "Razer BlackWidow", category: "Keyboard", price: 110, originalPrice: 130, img: "images/blackwidow.jpg" },
+
+            { id: 15, name: "Logitech MX Master 3S", category: "Mouse", price: 85, img: "images/mxmaster3s.jpg" },
+
+            { id: 16, name: "PlayStation 5", category: "Console", price: 520, img: "images/ps5.png" },
+
+            { id: 17, name: "Apple Watch SE", category: "Smartwatch", price: 210, img: "images/watchse.jpeg" },
+
+            { id: 18, name: "USB-C Hub 8-in-1", category: "Accessories", price: 35, img: "images/hub.jpg" },
+            { id: 19, name: "Anker 20W Charger", category: "Accessories", price: 19, originalPrice: 25, img: "images/anker20w.webp" }
         ];
 
         const productsDiv = document.getElementById("products");
@@ -342,7 +550,7 @@
         function renderProducts(list) {
             if (!productsDiv) return;
             productsDiv.innerHTML = "";
-            
+
             if (list.length === 0) {
                 productsDiv.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #dc3545;">No products found matching your criteria.</p>`;
                 return;
@@ -350,87 +558,105 @@
 
             list.forEach(p => {
                 const isDiscounted = p.originalPrice && p.originalPrice > p.price;
-                
-                // Construct the price HTML with or without the crossed-out original price
-                const priceHtml = isDiscounted 
+
+                const priceHtml = isDiscounted
                     ? `<span class="original-price">${p.originalPrice}$</span><span class="current-price">${p.price}$</span>`
                     : `<span class="current-price">${p.price}$</span>`;
 
+                const detailsHtml = p.detailsPage
+                    ? `<a class="details-link" href="${p.detailsPage}">View features</a>`
+                    : ``;
+
+                const imgHtml = p.img
+                    ? `<img src="${p.img}" alt="${p.name}" onerror="this.remove(); this.parentElement.innerHTML='<div class=\\'img-fallback\\'>${p.name} Image</div>';">`
+                    : `<div class="img-fallback">${p.name} Image</div>`;
+
                 productsDiv.innerHTML += `
                     <div class="card">
-                        <!-- Space for Picture/Asset -->
-                        <div class="card-image-placeholder">
-                            ${p.name} Image Placeholder
+                        <div class="card-image">
+                            ${imgHtml}
                         </div>
-                        
+
                         <h4>${p.name}</h4>
                         <p>Category: ${p.category}</p>
-                        
-                        <!-- Discount Line/Price Display -->
+
                         <div class="price-container">
                             ${priceHtml}
                         </div>
-                        
+
                         <button onclick="addToCart(${p.id})">
                             <i class="fas fa-cart-plus"></i> Add to Cart
                         </button>
+
+                        ${detailsHtml}
                     </div>
                 `;
             });
         }
 
-        /* ================= FILTERING AND INITIAL LOAD ================= */
-
         function filterProducts() {
             const searchInput = document.getElementById("search");
             const categorySelect = document.getElementById("category");
-
             if (!searchInput || !categorySelect) return;
 
-            const search = searchInput.value.toLowerCase();
+            const search = searchInput.value.toLowerCase().trim();
             const category = categorySelect.value;
 
             const filtered = products.filter(p => {
-                const matchesSearch = p.name.toLowerCase().includes(search);
+                const matchesSearch = p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search);
                 const isDiscounted = p.originalPrice && p.originalPrice > p.price;
 
-                if (category === "Discount") {
-                    // If 'Discount' is selected, show only discounted items that match search
-                    return matchesSearch && isDiscounted;
-                } else {
-                    // Otherwise, apply standard category and search filtering
-                    return matchesSearch && (category === "" || p.category === category);
-                }
+                if (category === "Discount") return matchesSearch && isDiscounted;
+                return matchesSearch && (category === "" || p.category === category);
             });
 
             renderProducts(filtered);
         }
 
-        // Add event listeners when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            if (productsDiv) renderProducts(products); // Initial rendering
-            document.getElementById("search")?.addEventListener("input", filterProducts);
-            document.getElementById("category")?.addEventListener("change", filterProducts);
-        });
-
-        /* ================= CART FUNCTIONALITY ================= */
-
         function addToCart(id) {
-            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const cart = getCart();
             const productToAdd = products.find(p => p.id === id);
 
             if (productToAdd) {
                 cart.push(productToAdd);
-                localStorage.setItem("cart", JSON.stringify(cart));
+                setCart(cart);
                 showMessage(`Added ${productToAdd.name} to cart!`, 'success');
             } else {
                 showMessage("Error: Product not found.", 'error');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById("year").textContent = new Date().getFullYear();
+
+            renderProducts(products);
+            updateCartBadge();
+            updateLoginUI();
+
+            document.getElementById("search")?.addEventListener("input", filterProducts);
+            document.getElementById("category")?.addEventListener("change", filterProducts);
+        });
+
+        window.addEventListener("focus", () => {
+            updateCartBadge();
+            updateLoginUI();
+        });
+
+        /* ================= USER AUTH DISPLAY ================= */
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = JSON.parse(localStorage.getItem("currentUser"));
+            const loginLink = document.querySelector(".nav-sign-in span");
+            const loginAnchor = document.querySelector(".nav-sign-in");
         
-        // Note: The rest of the JS logic (buy, toggleAuth, submitAuth, logout, profile) 
-        // belongs in their respective files (cart.html, auth.html, profile.html) 
-        // and is omitted here for the requested index.html self-contained file.
+            if (user && loginLink) {
+                // Show username/email instead of Login
+                loginLink.innerText = user.email;
+        
+                // Optional: go to profile page instead of auth
+                loginAnchor.href = "profile.html";
+            }
+        });
+
     </script>
 </body>
 </html>
