@@ -144,8 +144,12 @@ body {
   <div class="auth-right">
     <h2 id="title">Sign Up</h2>
 
-    <input type="email" placeholder="Email">
-    <input type="password" placeholder="Password">
+    <!-- Sign Up fields (hidden on Login) -->
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
     <input type="password" id="repeat" placeholder="Repeat Password">
 
     <button id="btn">Sign Up</button>
@@ -157,14 +161,19 @@ body {
   </div>
 
 </div>
+
 <script>
 let isSignup = true;
 
 function toggleAuth() {
   isSignup = !isSignup;
 
-  document.getElementById("title").innerText = isSignup ? "Sign Up" : "Login";
-  document.getElementById("btn").innerText = isSignup ? "Sign Up" : "Login";
+  document.getElementById("title").innerText = isSignup ? "Sign Up" : "Sign In";
+  document.getElementById("btn").innerText = isSignup ? "Sign Up" : "Sign In";
+
+  // Show/hide sign-up-only fields
+  document.getElementById("firstName").style.display = isSignup ? "block" : "none";
+  document.getElementById("lastName").style.display = isSignup ? "block" : "none";
   document.getElementById("repeat").style.display = isSignup ? "block" : "none";
 
   document.getElementById("toggleText").innerHTML = isSignup
@@ -175,44 +184,62 @@ function toggleAuth() {
 document.getElementById("btn").addEventListener("click", submitAuth);
 
 function submitAuth() {
-  const email = document.querySelector('input[type="email"]').value.trim();
-  const password = document.querySelector('input[type="password"]').value.trim();
-  const repeat = document.getElementById("repeat").value.trim();
+  const firstName = document.getElementById("firstName").value.trim();
+  const lastName  = document.getElementById("lastName").value.trim();
+  const email     = document.getElementById("email").value.trim();
+  const password  = document.getElementById("password").value.trim();
+  const repeat    = document.getElementById("repeat").value.trim();
 
-  if (!email || !password || (isSignup && !repeat)) {
+  // ===== Validation =====
+  if (!email || !password || (isSignup && (!firstName || !lastName || !repeat))) {
     alert("Please fill all fields");
+    return;
+  }
+
+  // Gmail/email must contain "@"
+  if (!email.includes("@")) {
+    alert("Email must contain @");
+    return;
+  }
+
+  // Password must be at least 6 chars
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters");
     return;
   }
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  /* ===== SIGN UP ===== */
+  // ===== SIGN UP =====
   if (isSignup) {
     if (password !== repeat) {
       alert("Passwords do not match");
       return;
     }
 
-    const exists = users.find(u => u.email === email);
+    const exists = users.find(u => u.email.toLowerCase() === email.toLowerCase());
     if (exists) {
       alert("User already exists");
       return;
     }
 
-    users.push({ email, password });
+    const newUser = { firstName, lastName, email, password };
+    users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
 
-    alert("Account created successfully. Please login.");
+    alert("Account created successfully. Please Sign In.");
 
-    // 🔑 SWITCH TO LOGIN (NO REDIRECT)
+    // Switch to login, keep design
     toggleAuth();
-    document.getElementById("repeat").value = "";
 
-  } 
-  /* ===== LOGIN ===== */
+    // clear repeat field
+    document.getElementById("repeat").value = "";
+  }
+
+  // ===== LOGIN =====
   else {
-    const user = users.find(
-      u => u.email === email && u.password === password
+    const user = users.find(u =>
+      u.email.toLowerCase() === email.toLowerCase() && u.password === password
     );
 
     if (!user) {
@@ -220,9 +247,10 @@ function submitAuth() {
       return;
     }
 
+    // IMPORTANT: both values for your site logic
     localStorage.setItem("currentUser", JSON.stringify(user));
+    localStorage.setItem("logged", "true");
 
-    // REDIRECT ONLY AFTER LOGIN
     window.location.href = "index.html";
   }
 }
@@ -230,4 +258,3 @@ function submitAuth() {
 
 </body>
 </html>
-
