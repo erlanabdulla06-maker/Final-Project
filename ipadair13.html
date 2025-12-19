@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iPad Air 13 – Features | Byte.</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f8f9fa;color:#343a40}
+    .container{max-width:1100px;margin:0 auto;padding:20px}
+    .header{background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+    .top{display:flex;align-items:center;justify-content:space-between;padding:15px 0;gap:15px}
+    .logo{font-size:28px;font-weight:900;color:#007bff;letter-spacing:-1px;text-decoration:none}
+    .back{background:#007bff;color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:700}
+    .card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);margin-top:18px;display:grid;grid-template-columns:320px 1fr;gap:18px}
+    .img{height:220px;border:1px solid #e9ecef;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
+    .img img{width:100%;height:100%;object-fit:contain}
+    h1{font-size:26px;margin-bottom:6px}
+    .meta{color:#6c757d;font-weight:600;margin-bottom:12px}
+    .price{font-size:22px;font-weight:900;color:#007bff;margin:10px 0}
+    ul{margin-top:10px;padding-left:18px;color:#6c757d;line-height:1.8}
+    .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+    .btn{border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+    .btn-cart{background:#28a745;color:#fff}
+    .btn-home{background:#e9ecef}
+    @media(max-width:800px){.card{grid-template-columns:1fr}.img{height:200px}}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container top">
+      <a class="logo" href="index.html">Byte.</a>
+      <a class="back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card">
+      <div class="img">
+        <img src="images/ipadair13.webp" alt="iPad Air 13" onerror="this.remove(); this.parentElement.innerHTML='iPad Image';">
+      </div>
+
+      <div>
+        <h1>iPad Air 13</h1>
+        <div class="meta">Category: Tablet • Great for study, notes & media</div>
+        <div class="price">$560</div>
+
+        <h3>Key Features</h3>
+        <ul>
+          <li>Large 13-inch screen perfect for multitasking</li>
+          <li>Lightweight design for travel and daily use</li>
+          <li>Great for note-taking, drawing, and documents</li>
+          <li>Strong battery life for long sessions</li>
+          <li>Works well with keyboards and stylus accessories</li>
+        </ul>
+
+        <div class="actions">
+          <button class="btn btn-cart" onclick="addToCart()"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+          <a class="btn btn-home" href="cart.html" style="text-decoration:none;color:#343a40;display:inline-flex;align-items:center;gap:8px;">
+            <i class="fa-solid fa-cart-shopping"></i> Go to Cart
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function getCart(){
+      try{ const c=JSON.parse(localStorage.getItem("cart")); return Array.isArray(c)?c.filter(Boolean):[] }catch{return []}
+    }
+    function setCart(cart){ localStorage.setItem("cart", JSON.stringify(cart)); }
+    function addToCart(){
+      const product = { id: 7, name: "iPad Air 13", category: "Tablet", price: 560 };
+      const cart = getCart();
+      cart.push(product);
+      setCart(cart);
+      alert("Added to cart!");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Byte. | Product Features</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f8f9fa;color:#343a40;line-height:1.6}
+    .container{max-width:1000px;margin:0 auto;padding:0 20px}
+    .main-header{background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+    .top{display:flex;align-items:center;justify-content:space-between;padding:15px 0}
+    .logo{font-size:28px;font-weight:900;color:#007bff;letter-spacing:-1px;text-decoration:none}
+    .back{background:#007bff;color:#fff;padding:10px 14px;border-radius:10px;text-decoration:none;font-weight:800}
+    main{padding:22px 0 40px}
+    .card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .grid{display:grid;grid-template-columns:320px 1fr;gap:18px}
+    .img{height:220px;border:1px solid #e9ecef;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
+    .img img{width:100%;height:100%;object-fit:contain;display:block}
+    h1{font-size:26px;margin-bottom:6px}
+    .meta{color:#6c757d;font-weight:600;margin-bottom:12px}
+    .price{font-size:22px;font-weight:900;color:#007bff;margin:10px 0}
+    ul{margin-top:10px;padding-left:18px;color:#6c757d;line-height:1.8}
+    .note{margin-top:12px;background:rgba(0,123,255,.08);border:1px solid rgba(0,123,255,.15);padding:12px;border-radius:10px;color:#0369a1;font-weight:700}
+    @media(max-width:800px){.grid{grid-template-columns:1fr}.img{height:200px}}
+  </style>
+</head>
+
+<body>
+  <header class="main-header">
+    <div class="container top">
+      <a class="logo" href="index.html">Byte.</a>
+      <a class="back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="card">
+        <div class="grid">
+          <div class="img" id="imgBox">
+            <span style="color:#6c757d;font-weight:700">Image</span>
+          </div>
+
+          <div>
+            <h1 id="name">Product</h1>
+            <div class="meta" id="meta">Category: —</div>
+            <div class="price" id="price">$0</div>
+
+            <h3>Features</h3>
+            <ul id="features">
+              <li>Detailed specs will be added soon.</li>
+            </ul>
+
+            <div class="note">
+              <i class="fa-solid fa-circle-info"></i>
+              This is a universal feature page for products without a personal page.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function qs(name){
+      return new URLSearchParams(location.search).get(name);
+    }
+
+    const id = Number(qs("id")) || 0;
+
+    // You can expand this list later (or make it shared)
+    const PRODUCTS = {
+      2: { name:"Asus ZenBook 14", category:"Laptop", price:850, img:"images/zenbook.webp" },
+      3: { name:"Lenovo Legion 5", category:"Laptop", price:1100, img:"images/legion.webp" },
+      5: { name:"Samsung Galaxy S23", category:"Phone", price:650, img:"images/s23.jpeg" },
+      6: { name:"Google Pixel 10", category:"Phone", price:720, img:"images/pixel10.jpg" },
+      8: { name:"Galaxy Tab S11", category:"Tablet", price:630, img:"images/tabs11.webp" },
+      9: { name:"LG UltraGear 27''", category:"Monitor", price:290, img:"images/ultragear.jpg" },
+      10:{ name:"Dell 24'' IPS", category:"Monitor", price:170, img:"images/dell24.webp" },
+      11:{ name:"Sony WH-1000XM5", category:"Headphones", price:320, img:"images/sonyxm5.webp" },
+      12:{ name:"AirPods Pro 2", category:"Headphones", price:210, img:"images/airpodspro2.jpeg" },
+      13:{ name:"Logitech MX Keys", category:"Keyboard", price:95, img:"images/mxkeys.avif" },
+      14:{ name:"Razer BlackWidow", category:"Keyboard", price:110, img:"images/blackwidow.jpg" },
+      15:{ name:"Logitech MX Master 3S", category:"Mouse", price:85, img:"images/mxmaster3s.jpg" },
+      16:{ name:"PlayStation 5", category:"Console", price:520, img:"images/ps5.png" },
+      17:{ name:"Apple Watch SE", category:"Smartwatch", price:210, img:"images/watchse.jpeg" },
+      18:{ name:"USB-C Hub 8-in-1", category:"Accessories", price:35, img:"images/hub.jpg" },
+      19:{ name:"Anker 20W Charger", category:"Accessories", price:19, img:"images/anker20w.webp" }
+    };
+
+    const p = PRODUCTS[id] || { name:"Unknown Product", category:"—", price:0, img:"" };
+
+    document.getElementById("name").textContent = p.name;
+    document.getElementById("meta").textContent = `Category: ${p.category}`;
+    document.getElementById("price").textContent = `$${p.price}`;
+
+    if (p.img) {
+      document.getElementById("imgBox").innerHTML =
+        `<img src="${p.img}" alt="${p.name}" onerror="this.remove();">`;
+    }
+  </script>
+</body>
+</html>
