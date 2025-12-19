@@ -1,24 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Authentication</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Byte. | Sign Up</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #eef4ff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== MAIN CARD ===== */
+.auth-container {
+  display: flex;
+  width: 900px;
+  max-width: 95%;
+  background: linear-gradient(135deg, #cfe8ff, #a7c7ff);
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+/* ===== LEFT SIDE ===== */
+.auth-left {
+  flex: 1;
+  padding: 50px;
+  color: #1f2d3d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-left h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.auth-left p {
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 350px;
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: 900;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* ===== RIGHT SIDE ===== */
+.auth-right {
+  flex: 1;
+  background: white;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-right h2 {
+  margin-bottom: 20px;
+  color: #343a40;
+}
+
+.auth-right input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  font-size: 14px;
+}
+
+.auth-right button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.auth-right button:hover {
+  background: #0056b3;
+}
+
+.auth-right p {
+  font-size: 14px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.auth-right span {
+  color: #007bff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .auth-container {
+    flex-direction: column;
+  }
+  .auth-left {
+    text-align: center;
+    align-items: center;
+  }
+}
+</style>
 </head>
-<body class="auth">
 
-<h2 id="title">Login</h2>
+<body>
 
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+<div class="auth-container">
 
-<button onclick="submitAuth()">Login</button>
+  <!-- LEFT MARKETING SECTION -->
+  <div class="auth-left">
+    <div class="brand">Byte.</div>
+    <h1>Fast, Smart & Secure Marketplace</h1>
+    <p>
+      Byte. is a modern online marketplace for laptops, smartphones, and tech accessories.
+      Discover top brands, exclusive discounts, and a seamless shopping experience — all in one place.
+    </p>
+  </div>
 
-<p id="switch">
-  Don’t have an account?
-  <span onclick="toggleAuth()">Sign up</span>
-</p>
+  <!-- RIGHT AUTH SECTION -->
+  <div class="auth-right">
+    <h2 id="title">Sign Up</h2>
 
-<script src="script.js"></script>
+    <input type="email" placeholder="Email">
+    <input type="password" placeholder="Password">
+    <input type="password" id="repeat" placeholder="Repeat Password">
+
+    <button id="btn">Sign Up</button>
+
+    <p id="toggleText">
+      Already have an account?
+      <span onclick="toggleAuth()">Sign In</span>
+    </p>
+  </div>
+
+</div>
+<script>
+let isSignup = true;
+
+function toggleAuth() {
+  isSignup = !isSignup;
+
+  document.getElementById("title").innerText = isSignup ? "Sign Up" : "Login";
+  document.getElementById("btn").innerText = isSignup ? "Sign Up" : "Login";
+  document.getElementById("repeat").style.display = isSignup ? "block" : "none";
+
+  document.getElementById("toggleText").innerHTML = isSignup
+    ? `Already have an account? <span onclick="toggleAuth()">Sign In</span>`
+    : `Don’t have an account? <span onclick="toggleAuth()">Sign Up</span>`;
+}
+
+document.getElementById("btn").addEventListener("click", submitAuth);
+
+function submitAuth() {
+  const email = document.querySelector('input[type="email"]').value.trim();
+  const password = document.querySelector('input[type="password"]').value.trim();
+  const repeat = document.getElementById("repeat").value.trim();
+
+  if (!email || !password || (isSignup && !repeat)) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  /* ===== SIGN UP ===== */
+  if (isSignup) {
+    if (password !== repeat) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    const exists = users.find(u => u.email === email);
+    if (exists) {
+      alert("User already exists");
+      return;
+    }
+
+    users.push({ email, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account created successfully. Please login.");
+
+    // 🔑 SWITCH TO LOGIN (NO REDIRECT)
+    toggleAuth();
+    document.getElementById("repeat").value = "";
+
+  } 
+  /* ===== LOGIN ===== */
+  else {
+    const user = users.find(
+      u => u.email === email && u.password === password
+    );
+
+    if (!user) {
+      alert("Invalid email or password");
+      return;
+    }
+
+    localStorage.setItem("currentUser", JSON.stringify(user));
+
+    // REDIRECT ONLY AFTER LOGIN
+    window.location.href = "index.html";
+  }
+}
+</script>
+
 </body>
 </html>
+
