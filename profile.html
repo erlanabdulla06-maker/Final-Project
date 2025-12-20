@@ -27,6 +27,57 @@ body {
     border-radius: 12px; cursor: pointer; font-weight: 600;
 }
 
+.profile-header{
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+}
+
+.header-actions{
+  margin-left: auto;              
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-btn{
+  background: #0288d1;
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(2, 136, 209, 0.25);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.back-btn:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(2, 136, 209, 0.30);
+}
+
+@media (max-width: 768px){
+  .profile-header{
+    flex-wrap: wrap;
+  }
+  .header-actions{
+    width: 100%;
+    justify-content: flex-end; 
+  }
+}
+
 .profile-section { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
 .profile-section h2 { font-size: 24px; color: #0288d1; margin-bottom: 20px; display: flex; align-items: center; gap:10px; }
 .profile-field { margin-bottom: 15px; font-size: 16px; }
@@ -97,8 +148,17 @@ body {
 <div class="container">
 
     <div class="profile-header">
-        <h1><i class="fas fa-user-circle"></i> Your Profile</h1>
-        <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      <h1><i class="fas fa-user-circle"></i> Your Profile</h1>
+    
+      <div class="header-actions">
+        <a href="index.html" class="back-btn">
+          <i class="fas fa-arrow-left"></i> Back to Shopping
+        </a>
+    
+        <button class="logout-btn" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
     </div>
 
     <div class="profile-section">
@@ -141,7 +201,6 @@ body {
         <div id="profile-cart-container"></div>
     </div>
 
-    <!-- ✅ ORDER HISTORY -->
     <div class="profile-section">
         <h2><i class="fas fa-box"></i> Order History</h2>
         <div id="orders-container"></div>
@@ -156,7 +215,6 @@ let delivery = JSON.parse(localStorage.getItem("delivery")) || { address:"", tim
 
 if(!user) window.location.href = "auth.html";
 
-// Message box
 function showMessage(msg, type='success'){
     const icon = type==='success'?'fa-check-circle':'fa-exclamation-circle';
     $("#message-box")
@@ -167,16 +225,14 @@ function showMessage(msg, type='success'){
     setTimeout(()=>$("#message-box").removeClass("show"),3000);
 }
 
-// Phone auto-format: +7 XXX XXX XX XX
 function formatKzPhone(value){
     let digits = value.replace(/\D/g, "");
 
-    // Accept: 7XXXXXXXXXX or 8XXXXXXXXXX or XXXXXXXXXX
     if (digits.startsWith("8")) digits = "7" + digits.slice(1);
     if (!digits.startsWith("7")) digits = "7" + digits;
     digits = digits.slice(0, 11);
 
-    const p = digits.slice(1); // after 7
+    const p = digits.slice(1); 
     const a = p.slice(0,3);
     const b = p.slice(3,6);
     const c = p.slice(6,8);
@@ -195,24 +251,20 @@ function isValidKzPhone(phone){
     return /^\+7\s\d{3}\s\d{3}\s\d{2}\s\d{2}$/.test(phone);
 }
 
-// Populate user info
 $("#firstName").val(user.firstName || "");
 $("#lastName").val(user.lastName || "");
 $("#email").val(user.email || "");
 $("#phone").val(user.phone || "");
 
-// Phone input behavior
 $("#phone").on("input", function(){
     const formatted = formatKzPhone($(this).val());
     $(this).val(formatted);
 });
 
-// Populate delivery info
 $("#delivery-address").val(delivery.address || "");
 const times = ["10:00-12:00","12:00-14:00","14:00-16:00","16:00-18:00","18:00-20:00","20:00-22:00"];
 $("#delivery-time").html(times.map(t=>`<option value="${t}" ${t===delivery.time?'selected':''}>${t}</option>`).join(""));
 
-// Save profile
 $("#save-profile-btn").click(()=>{
     const first = $("#firstName").val().trim();
     const last  = $("#lastName").val().trim();
@@ -236,7 +288,6 @@ $("#save-profile-btn").click(()=>{
     showMessage("Profile updated successfully!");
 });
 
-// Save delivery
 $("#save-delivery-btn").click(()=>{
     delivery.address = $("#delivery-address").val().trim();
     delivery.time = $("#delivery-time").val();
@@ -244,7 +295,6 @@ $("#save-delivery-btn").click(()=>{
     showMessage("Delivery settings saved!");
 });
 
-// Logout
 $("#logout-btn").click(()=>{
     localStorage.removeItem("currentUser");
     localStorage.setItem("logged","false");
@@ -252,7 +302,6 @@ $("#logout-btn").click(()=>{
     setTimeout(()=>{window.location.href="auth.html";},1000);
 });
 
-// Render cart
 function renderProfileCart(){
     const container = $("#profile-cart-container");
     cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -283,7 +332,6 @@ function renderProfileCart(){
     });
 }
 
-// ✅ Render orders
 function renderOrders(){
     const container = $("#orders-container");
     const ordersKey = `orders_${user.email}`;
@@ -294,12 +342,10 @@ function renderOrders(){
         return;
     }
 
-    // Latest first
     const list = [...orders].reverse();
 
     let html = "";
     list.forEach(order => {
-        // Group identical items inside order
         const grouped = new Map();
         (order.items || []).forEach(p=>{
             const key = (p.id != null) ? `id:${p.id}` : `k:${p.name}|${p.category}|${p.price}`;

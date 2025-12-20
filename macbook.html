@@ -71,7 +71,6 @@
     }
     function setCart(cart){ localStorage.setItem("cart", JSON.stringify(cart)); }
     function addToCart(id){
-      // Minimal product object so cart.html can render
       const product = { id: 1, name: "MacBook Pro 14", category: "Laptop", price: 1200 };
       const cart = getCart();
       cart.push(product);

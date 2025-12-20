@@ -1,660 +1,569 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Byte. - Online Tech Market</title>
-    <!-- Icon Library (Font Awesome) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Byte. - Online Tech Market</title>
 
-    <style>
-        /* --- Global Reset & Base (Clean Code) --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            line-height: 1.6;
-        }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Central container for all sections */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      color: #343a40;
+      line-height: 1.6;
+    }
 
-        /* Default flex settings for header bars */
-        .top-bar.container,
-        .main-nav .container {
-            display: flex;
-            align-items: center;
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-            transition: color 0.3s ease;
-        }
+    .top-bar.container {
+      display: flex;
+      align-items: center;
+    }
 
-        /* --- Header Styling (Byte. Design) --- */
-        .main-header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.3s ease;
+    }
 
-        .top-bar {
-            padding: 15px 0;
-            justify-content: space-between;
-            gap: 30px;
-        }
+    .main-header {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
 
-        .logo {
-            font-size: 28px;
-            font-weight: 900;
-            color: #007bff;
-            letter-spacing: -1px;
-        }
+    .top-bar {
+      padding: 15px 0;
+      justify-content: space-between;
+      gap: 30px;
+    }
 
-        /* Combined Search Bar & Category Select */
-        .search-box {
-            display: flex;
-            gap: 10px;
-            max-width: 600px;
-            flex-grow: 1;
-            align-items: center;
-        }
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #007bff;
+      letter-spacing: -1px;
+    }
 
-        .search-box input#search {
-            flex-grow: 1;
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ced4da;
-            border-radius: 20px;
-            font-size: 14px;
-        }
+    .search-box {
+      display: flex;
+      gap: 10px;
+      max-width: 600px;
+      flex-grow: 1;
+      align-items: center;
+    }
 
-        .search-box select#category {
-            padding: 10px 15px;
-            border: 1px solid #ced4da;
-            border-radius: 20px;
-            font-size: 14px;
-            background-color: white;
-            height: 40px;
-            min-width: 140px;
-        }
+    .search-box input#search {
+      flex-grow: 1;
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid #ced4da;
+      border-radius: 20px;
+      font-size: 14px;
+    }
 
-        /* Utility Icons (Cart, Login/Auth) */
-        .utility-icons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
+    .search-box select#category {
+      padding: 10px 15px;
+      border: 1px solid #ced4da;
+      border-radius: 20px;
+      font-size: 14px;
+      background-color: white;
+      height: 40px;
+      min-width: 140px;
+    }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 12px;
-            color: #555;
-            transition: transform 0.2s ease-out, color 0.3s;
-            position: relative;
-            min-width: 52px;
-        }
+    .utility-icons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
 
-        .nav-item i {
-            font-size: 18px;
-            margin-bottom: 3px;
-        }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+      color: #555;
+      transition: color 0.25s ease;
+      position: relative;
+      min-width: 60px;
+    }
 
-        .nav-item:hover {
-            color: #007bff;
-            transform: translateY(-2px);
-        }
+    .nav-item i {
+      font-size: 18px;
+      margin-bottom: 3px;
+    }
 
-        /* Cart counter badge */
-        .cart-badge{
-            position:absolute;
-            top:-6px;
-            right:-10px;
-            min-width:18px;
-            height:18px;
-            padding:0 6px;
-            border-radius:999px;
-            background:#dc3545;
-            color:#fff;
-            font-size:11px;
-            font-weight:900;
-            display:none;
-            align-items:center;
-            justify-content:center;
-        }
+    .nav-item:hover {
+      color: #007bff;
+    }
 
-        /* Message Box Styling (Replaces alert()) */
-        #message-box {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #28a745;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            font-weight: bold;
-        }
-        #message-box.error { background-color: #dc3545; }
+    .cart-badge{
+      position:absolute;
+      top:-6px;
+      right:-10px;
+      min-width:18px;
+      height:18px;
+      padding:0 6px;
+      border-radius:999px;
+      background:#dc3545;
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+      display:none;
+      align-items:center;
+      justify-content:center;
+    }
 
-        /* ===== HERO TITLE ===== */
-        .hero { padding: 28px 0 0; }
-        .hero-box {
-            background: #ffffff;
-            border: 1px solid rgba(0,0,0,0.05);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            border-radius: 10px;
-            padding: 18px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-top: 18px;
-        }
-        .hero-title {
-            font-size: 18px;
-            font-weight: 900;
-            color: #343a40;
-        }
-        .hero-subtitle {
-            margin-top: 4px;
-            color: #6c757d;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .hero-badge {
-            background: rgba(0, 123, 255, 0.1);
-            color: #007bff;
-            border: 1px solid rgba(0, 123, 255, 0.2);
-            padding: 8px 12px;
-            border-radius: 999px;
-            font-weight: 800;
-            font-size: 12px;
-            white-space: nowrap;
-        }
+    #message-box {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+      font-weight: bold;
+      pointer-events: none;
+    }
+    #message-box.error { background-color: #dc3545; }
 
-        /* Product Grid Styles */
-        main { padding: 22px 0 40px; }
+    .hero { padding: 28px 0 0; }
+    .hero-box {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border-radius: 10px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 18px;
+    }
 
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
+    .hero-title { font-size: 18px; font-weight: 900; color: #343a40; }
+    .hero-subtitle { margin-top: 4px; color: #6c757d; font-size: 14px; font-weight: 600; }
 
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease;
-            overflow: hidden;
-        }
+    .hero-badge {
+      background: rgba(0, 123, 255, 0.1);
+      color: #007bff;
+      border: 1px solid rgba(0, 123, 255, 0.2);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      white-space: nowrap;
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
+    main { padding: 22px 0 40px; }
 
-        .card-image {
-            height: 150px;
-            background-color: #e9ecef;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-        }
-        
-        .card-image {
-            height: 150px;
-            background-color: #ffffff;      /* makes it clean */
-            border: 1px solid #e9ecef;      /* light border */
-            border-radius: 6px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;                  /* space around image */
-        }
-        
-        .card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;            /* FIX: no ugly crop */
-            display: block;
-        }
-        
-        .img-fallback {
-            font-size: 14px;
-            color: #6c757d;
-            font-weight: 500;
-            padding: 10px;
-            text-align:center;
-        }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
 
-        .card h4 {
-            font-size: 20px;
-            margin-bottom: 5px;
-            color: #343a40;
-        }
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s ease;
+      overflow: hidden;
+    }
 
-        .card p {
-            margin-bottom: 5px;
-            color: #6c757d;
-        }
+    .card:hover { box-shadow: 0 8px 15px rgba(0,0,0,0.10); }
 
-        .price-container {
-            margin-top: 10px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: baseline;
-        }
+    .card-image {
+      height: 150px;
+      background-color: #ffffff;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      overflow: hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 10px;
+    }
 
-        .original-price {
-            color: #dc3545;
-            text-decoration: line-through;
-            font-size: 14px;
-            margin-right: 10px;
-            font-weight: normal;
-        }
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
 
-        .current-price {
-            font-weight: bold;
-            color: #007bff;
-            font-size: 18px;
-        }
+    .img-fallback {
+      font-size: 14px;
+      color: #6c757d;
+      font-weight: 500;
+      padding: 10px;
+      text-align:center;
+    }
 
-        .card button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            width: 100%;
-        }
-        .card button:hover { background-color: #1e7e34; }
+    .card h4 { font-size: 20px; margin-bottom: 5px; color: #343a40; }
+    .card p { margin-bottom: 5px; color: #6c757d; }
 
-        .details-link{
-            display:block;
-            text-align:center;
-            margin-top:10px;
-            font-size:13px;
-            font-weight:600;
-            color:#007bff;
-        }
-        .details-link:hover{ text-decoration: underline; }
+    .price-container {
+      margin-top: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: baseline;
+    }
 
-        /* ===== FOOTER ===== */
-        footer {
-            margin-top: 30px;
-            background: #ffffff;
-            border-top: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 -2px 6px rgba(0,0,0,0.03);
-        }
-        .footer-inner {
-            padding: 28px 0;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr 1fr;
-            gap: 22px;
-        }
-        .footer-title {
-            font-weight: 900;
-            color: #343a40;
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-        .footer-text, .footer-link {
-            color: #6c757d;
-            font-size: 14px;
-            line-height: 1.7;
-        }
-        .footer-link { display:block; margin: 6px 0; }
-        .footer-link:hover { color:#007bff; }
+    .original-price {
+      color: #dc3545;
+      text-decoration: line-through;
+      font-size: 14px;
+      margin-right: 10px;
+      font-weight: normal;
+    }
 
-        .footer-bottom{
-            border-top: 1px solid rgba(0,0,0,0.06);
-            padding: 14px 0;
-            color:#6c757d;
-            font-size: 13px;
-            text-align:center;
-        }
+    .current-price {
+      font-weight: bold;
+      color: #007bff;
+      font-size: 18px;
+    }
 
-        /* Mobile adjustments */
-        @media (max-width: 768px) {
-            .top-bar.container {
-                flex-wrap: wrap;
-                justify-content: center;
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-            .logo {
-                flex-basis: 100%;
-                text-align: center;
-                margin-bottom: 10px;
-            }
-            .search-box {
-                order: 3;
-                flex-basis: 100%;
-                max-width: 100%;
-                margin-bottom: 10px;
-            }
-            .utility-icons { order: 2; gap: 10px; }
+    .card button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s ease;
+      width: 100%;
+    }
+    .card button:hover { background-color: #1e7e34; }
 
-            .hero-box { flex-direction: column; align-items: flex-start; }
-            .footer-inner { grid-template-columns: 1fr; }
-        }
-    </style>
+    .details-link{
+      display:block;
+      text-align:center;
+      margin-top:10px;
+      font-size:13px;
+      font-weight:600;
+      color:#007bff;
+    }
+    .details-link:hover { text-decoration: underline; }
+
+    footer {
+      margin-top: 30px;
+      background: #ffffff;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.03);
+    }
+
+    .footer-inner {
+      padding: 28px 0;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 22px;
+    }
+
+    .footer-title { font-weight: 900; color: #343a40; margin-bottom: 10px; font-size: 15px; }
+    .footer-text, .footer-link { color: #6c757d; font-size: 14px; line-height: 1.7; }
+    .footer-link { display:block; margin: 6px 0; }
+    .footer-link:hover { color:#007bff; }
+
+    .footer-bottom{
+      border-top: 1px solid rgba(0,0,0,0.06);
+      padding: 14px 0;
+      color:#6c757d;
+      font-size: 13px;
+      text-align:center;
+    }
+
+    @media (max-width: 768px) {
+      .top-bar.container {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .logo { flex-basis: 100%; text-align: center; margin-bottom: 10px; }
+      .search-box { order: 3; flex-basis: 100%; max-width: 100%; margin-bottom: 10px; }
+      .utility-icons { order: 2; gap: 10px; }
+      .hero-box { flex-direction: column; align-items: flex-start; }
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-    <div id="message-box"></div>
+  <div id="message-box"></div>
 
-    <header class="main-header">
-        <div class="top-bar container">
-            <a href="index.html" class="logo">Byte.</a>
+  <header class="main-header">
+    <div class="top-bar container">
+      <a href="index.html" class="logo">Byte.</a>
 
-            <div class="search-box">
-                <input type="text" id="search" placeholder="Search product...">
-                <select id="category">
-                    <option value="">All</option>
-                    <option value="Discount">Discounts</option>
-                    <option value="Laptop">Laptop</option>
-                    <option value="Phone">Phone</option>
-                    <option value="Tablet">Tablet</option>
-                    <option value="Monitor">Monitor</option>
-                    <option value="Headphones">Headphones</option>
-                    <option value="Keyboard">Keyboard</option>
-                    <option value="Mouse">Mouse</option>
-                    <option value="Console">Console</option>
-                    <option value="Smartwatch">Smartwatch</option>
-                    <option value="Accessories">Accessories</option>
-                </select>
-            </div>
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Search product...">
+        <select id="category">
+          <option value="">All</option>
+          <option value="Discount">Discounts</option>
+          <option value="Laptop">Laptop</option>
+          <option value="Phone">Phone</option>
+          <option value="Tablet">Tablet</option>
+          <option value="Monitor">Monitor</option>
+          <option value="Headphones">Headphones</option>
+          <option value="Keyboard">Keyboard</option>
+          <option value="Mouse">Mouse</option>
+          <option value="Console">Console</option>
+          <option value="Smartwatch">Smartwatch</option>
+          <option value="Accessories">Accessories</option>
+        </select>
+      </div>
 
-            <div class="utility-icons">
-                <a href="cart.html" class="nav-item cart-item">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Cart</span>
-                    <span id="cart-count" class="cart-badge">0</span>
-                </a>
+      <div class="utility-icons">
+        <a href="cart.html" class="nav-item cart-item">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Cart</span>
+          <span id="cart-count" class="cart-badge">0</span>
+        </a>
 
-                <a href="auth.html" class="nav-item nav-sign-in">
-                    <i class="fas fa-user-circle"></i>
-                    <span id="loginText">Login</span>
-                </a>
-            </div>
+        <a href="auth.html" class="nav-item nav-sign-in">
+          <i class="fas fa-user-circle"></i>
+          <span id="loginText">Login</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-box">
+        <div>
+          <div class="hero-title">With Byte, everything becomes “byter” — faster, simpler, easier.</div>
+          <div class="hero-subtitle">Find tech, compare prices, grab discounts, and checkout in minutes.</div>
         </div>
-    </header>
+        <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Smart Tech Deals</div>
+      </div>
+    </div>
+  </section>
 
-    <section class="hero">
-        <div class="container">
-            <div class="hero-box">
-                <div>
-                    <div class="hero-title">With Byte, everything becomes “byter” — faster, simpler, easier.</div>
-                    <div class="hero-subtitle">Find tech, compare prices, grab discounts, and checkout in minutes.</div>
-                </div>
-                <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Smart Tech Deals</div>
-            </div>
+  <main>
+    <div class="container">
+      <div id="products" class="products"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-title">About Byte.</div>
+          <div class="footer-text">
+            Byte. is an online tech market demo project. We help users discover laptops, phones, and accessories
+            with a clean UI, category filtering, discounts, and a simple cart experience.
+          </div>
         </div>
-    </section>
 
-    <main>
-        <div class="container">
-            <div id="products" class="products"></div>
+        <div>
+          <div class="footer-title">Contact</div>
+          <div class="footer-text">
+            <div><i class="fa-solid fa-envelope"></i> support@byte-market.com</div>
+            <div style="margin-top:6px;"><i class="fa-solid fa-phone"></i> +7 (777) 777-77-77</div>
+            <div style="margin-top:6px;"><i class="fa-solid fa-location-dot"></i> Almaty, Kazakhstan</div>
+          </div>
         </div>
-    </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-inner">
-                <div>
-                    <div class="footer-title">About Byte.</div>
-                    <div class="footer-text">
-                        Byte. is an online tech market demo project. We help users discover laptops, phones, and accessories
-                        with a clean UI, category filtering, discounts, and a simple cart experience.
-                    </div>
-                </div>
-
-                <div>
-                    <div class="footer-title">Contact</div>
-                    <div class="footer-text">
-                        <div><i class="fa-solid fa-envelope"></i> support@byte-market.com</div>
-                        <div style="margin-top:6px;"><i class="fa-solid fa-phone"></i> +7 (777) 777-77-77</div>
-                        <div style="margin-top:6px;"><i class="fa-solid fa-location-dot"></i> Almaty, Kazakhstan</div>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="footer-title">Links</div>
-                    <a class="footer-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
-                    <a class="footer-link" href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
-                    <a class="footer-link" href="profile.html"><i class="fa-solid fa-id-card"></i> Profile</a>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                © <span id="year"></span> Byte. Online Tech Market — Demo project
-            </div>
+        <div>
+          <div class="footer-title">Links</div>
+          <a class="footer-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+          <a class="footer-link" href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+          <a class="footer-link" href="profile.html"><i class="fa-solid fa-id-card"></i> Profile</a>
         </div>
-    </footer>
+      </div>
 
-    <script>
-        /* ================= UTILITY & MESSAGE BOX ================= */
-        const messageBox = document.getElementById("message-box");
-        let messageTimeout;
+      <div class="footer-bottom">
+        © <span id="year"></span> Byte. Online Tech Market — Demo project
+      </div>
+    </div>
+  </footer>
 
-        function showMessage(message, type = 'success') {
-            clearTimeout(messageTimeout);
-            messageBox.className = '';
-            messageBox.textContent = message;
-            messageBox.classList.add(type);
-            messageBox.style.opacity = '1';
-            messageTimeout = setTimeout(() => { messageBox.style.opacity = '0'; }, 2500);
-        }
+  <script>
+    const messageBox = document.getElementById("message-box");
+    let messageTimeout;
 
-        /* ================= CART BADGE ================= */
-        const cartCountEl = document.getElementById("cart-count");
+    function showMessage(message, type = 'success') {
+      clearTimeout(messageTimeout);
+      messageBox.className = '';
+      messageBox.textContent = message;
+      messageBox.classList.add(type);
+      messageBox.style.opacity = '1';
+      messageTimeout = setTimeout(() => { messageBox.style.opacity = '0'; }, 2000);
+    }
 
-        function getCart() {
-            const raw = localStorage.getItem("cart");
-            try {
-                const parsed = JSON.parse(raw);
-                return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-            } catch {
-                return [];
-            }
-        }
+    const cartCountEl = document.getElementById("cart-count");
 
-        function setCart(cart) {
-            localStorage.setItem("cart", JSON.stringify(cart));
-            updateCartBadge();
-        }
+    function getCart() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem("cart") || "[]");
+        return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+      } catch {
+        return [];
+      }
+    }
 
-        function updateCartBadge() {
-            if (!cartCountEl) return;
-            const count = getCart().length;
-            cartCountEl.textContent = count;
-            cartCountEl.style.display = count > 0 ? "inline-flex" : "none";
-        }
+    function setCart(cart) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartBadge();
+    }
 
-        /* ================= USER AUTH DISPLAY ================= */
-        function updateLoginUI(){
-            const loginSpan = document.getElementById("loginText");
-            const loginAnchor = document.querySelector(".nav-sign-in");
+    function updateCartBadge() {
+      if (!cartCountEl) return;
+      const count = getCart().length;
+      cartCountEl.textContent = count;
+      cartCountEl.style.display = count > 0 ? "inline-flex" : "none";
+    }
 
-            const logged = localStorage.getItem("logged") === "true";
-            const user = JSON.parse(localStorage.getItem("user") || "null");
-            const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
-            const email = currentUser?.email || user?.email;
+    function updateLoginUI(){
+      const loginSpan = document.getElementById("loginText");
+      const loginAnchor = document.querySelector(".nav-sign-in");
+      const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
 
-            if (logged && email) {
-                loginSpan.innerText = email;
-                loginAnchor.href = "profile.html";
-            } else {
-                loginSpan.innerText = "Login";
-                loginAnchor.href = "auth.html";
-            }
-        }
+      if (currentUser) {
+        loginSpan.innerText = currentUser.firstName || currentUser.email || "Profile";
+        loginAnchor.href = "profile.html";
+      } else {
+        loginSpan.innerText = "Login";
+        loginAnchor.href = "auth.html";
+      }
+    }
 
-        /* ================= PRODUCTS ================= */
-        const products = [
-            { id: 1, name: "MacBook Pro 14", category: "Laptop", price: 1200, img: "images/macbook.jpg", detailsPage: "macbook.html" },
-            { id: 2, name: "Asus ZenBook 14", category: "Laptop", price: 850, originalPrice: 900, img: "images/zenbook.webp", detailsPage: "asset.html?id=2" },
-            { id: 3, name: "Lenovo Legion 5", category: "Laptop", price: 1100, img: "images/legion.webp", detailsPage: "asset.html?id=3" },
-          
-            { id: 4, name: "iPhone 17", category: "Phone", price: 800, img: "images/iphone17.png", detailsPage: "iphone17.html" },
-            { id: 5, name: "Samsung Galaxy S23", category: "Phone", price: 650, originalPrice: 700, img: "images/s23.jpeg", detailsPage: "asset.html?id=5" },
-            { id: 6, name: "Google Pixel 10", category: "Phone", price: 720, img: "images/pixel10.jpg", detailsPage: "asset.html?id=6" },
-          
-            { id: 7, name: "iPad Air 13", category: "Tablet", price: 560, img: "images/ipadair13.webp", detailsPage: "ipadair13.html" },
-            { id: 8, name: "Galaxy Tab S11", category: "Tablet", price: 630, originalPrice: 690, img: "images/tabs11.webp", detailsPage: "asset.html?id=8" },
-          
-            { id: 9, name: "LG UltraGear 27''", category: "Monitor", price: 290, img: "images/ultragear.jpg", detailsPage: "asset.html?id=9" },
-            { id: 10, name: "Dell 24'' IPS", category: "Monitor", price: 170, originalPrice: 200, img: "images/dell24.webp", detailsPage: "asset.html?id=10" },
-          
-            { id: 11, name: "Sony WH-1000XM5", category: "Headphones", price: 320, img: "images/sonyxm5.webp", detailsPage: "asset.html?id=11" },
-            { id: 12, name: "AirPods Pro 2", category: "Headphones", price: 210, img: "images/airpodspro2.jpeg", detailsPage: "asset.html?id=12" },
-          
-            { id: 13, name: "Logitech MX Keys", category: "Keyboard", price: 95, img: "images/mxkeys.avif", detailsPage: "asset.html?id=13" },
-            { id: 14, name: "Razer BlackWidow", category: "Keyboard", price: 110, originalPrice: 130, img: "images/blackwidow.jpg", detailsPage: "asset.html?id=14" },
-          
-            { id: 15, name: "Logitech MX Master 3S", category: "Mouse", price: 85, img: "images/mxmaster3s.jpg", detailsPage: "asset.html?id=15" },
-          
-            { id: 16, name: "PlayStation 5", category: "Console", price: 520, img: "images/ps5.png", detailsPage: "asset.html?id=16" },
-          
-            { id: 17, name: "Apple Watch SE", category: "Smartwatch", price: 210, img: "images/watchse.jpeg", detailsPage: "asset.html?id=17" },
-          
-            { id: 18, name: "USB-C Hub 8-in-1", category: "Accessories", price: 35, img: "images/hub.jpg", detailsPage: "asset.html?id=18" },
-            { id: 19, name: "Anker 20W Charger", category: "Accessories", price: 19, originalPrice: 25, img: "images/anker20w.webp", detailsPage: "asset.html?id=19" }
-          ];
-        
-         const productsDiv = document.getElementById("products");
+    const products = [
+      { id: 1, name: "MacBook Pro 14", category: "Laptop", price: 1200, img: "images/macbook.jpg", detailsPage: "macbook.html" },
+      { id: 2, name: "Asus ZenBook 14", category: "Laptop", price: 850, originalPrice: 900, img: "images/zenbook.webp", detailsPage: "asset.html?id=2" },
+      { id: 3, name: "Lenovo Legion 5", category: "Laptop", price: 1100, img: "images/legion.webp", detailsPage: "asset.html?id=3" },
 
-        function renderProducts(list) {
-            if (!productsDiv) return;
-            productsDiv.innerHTML = "";
+      { id: 4, name: "iPhone 17", category: "Phone", price: 800, img: "images/iphone17.png", detailsPage: "iphone17.html" },
+      { id: 5, name: "Samsung Galaxy S23", category: "Phone", price: 650, originalPrice: 700, img: "images/s23.jpeg", detailsPage: "asset.html?id=5" },
+      { id: 6, name: "Google Pixel 10", category: "Phone", price: 720, img: "images/pixel10.jpg", detailsPage: "asset.html?id=6" },
 
-            if (list.length === 0) {
-                productsDiv.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #dc3545;">No products found matching your criteria.</p>`;
-                return;
-            }
+      { id: 7, name: "iPad Air 13", category: "Tablet", price: 560, img: "images/ipadair13.webp", detailsPage: "ipadair13.html" },
+      { id: 8, name: "Galaxy Tab S11", category: "Tablet", price: 630, originalPrice: 690, img: "images/tabs11.webp", detailsPage: "asset.html?id=8" },
 
-            list.forEach(p => {
-                const isDiscounted = p.originalPrice && p.originalPrice > p.price;
+      { id: 9, name: "LG UltraGear 27''", category: "Monitor", price: 290, img: "images/ultragear.jpg", detailsPage: "asset.html?id=9" },
+      { id: 10, name: "Dell 24'' IPS", category: "Monitor", price: 170, originalPrice: 200, img: "images/dell24.webp", detailsPage: "asset.html?id=10" },
 
-                const priceHtml = isDiscounted
-                    ? `<span class="original-price">${p.originalPrice}$</span><span class="current-price">${p.price}$</span>`
-                    : `<span class="current-price">${p.price}$</span>`;
+      { id: 11, name: "Sony WH-1000XM5", category: "Headphones", price: 320, img: "images/sonyxm5.webp", detailsPage: "asset.html?id=11" },
+      { id: 12, name: "AirPods Pro 2", category: "Headphones", price: 210, img: "images/airpodspro2.jpeg", detailsPage: "asset.html?id=12" },
 
-                const detailsHtml = `<a class="details-link" href="${p.detailsPage || `asset.html?id=${p.id}`}">View features</a>`;
+      { id: 13, name: "Logitech MX Keys", category: "Keyboard", price: 95, img: "images/mxkeys.avif", detailsPage: "asset.html?id=13" },
+      { id: 14, name: "Razer BlackWidow", category: "Keyboard", price: 110, originalPrice: 130, img: "images/blackwidow.jpg", detailsPage: "asset.html?id=14" },
 
-                const imgHtml = p.img
-                    ? `<img src="${p.img}" alt="${p.name}" onerror="this.remove(); this.parentElement.innerHTML='<div class=\\'img-fallback\\'>${p.name} Image</div>';">`
-                    : `<div class="img-fallback">${p.name} Image</div>`;
+      { id: 15, name: "Logitech MX Master 3S", category: "Mouse", price: 85, img: "images/mxmaster3s.jpg", detailsPage: "asset.html?id=15" },
 
-                productsDiv.innerHTML += `
-                    <div class="card">
-                        <div class="card-image">
-                            ${imgHtml}
-                        </div>
+      { id: 16, name: "PlayStation 5", category: "Console", price: 520, img: "images/ps5.png", detailsPage: "asset.html?id=16" },
 
-                        <h4>${p.name}</h4>
-                        <p>Category: ${p.category}</p>
+      { id: 17, name: "Apple Watch SE", category: "Smartwatch", price: 210, img: "images/watchse.jpeg", detailsPage: "asset.html?id=17" },
 
-                        <div class="price-container">
-                            ${priceHtml}
-                        </div>
+      { id: 18, name: "USB-C Hub 8-in-1", category: "Accessories", price: 35, img: "images/hub.jpg", detailsPage: "asset.html?id=18" },
+      { id: 19, name: "Anker 20W Charger", category: "Accessories", price: 19, originalPrice: 25, img: "images/anker20w.webp", detailsPage: "asset.html?id=19" }
+    ];
 
-                        <button onclick="addToCart(${p.id})">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
-                        </button>
+    const productsDiv = document.getElementById("products");
 
-                        ${detailsHtml}
-                    </div>
-                `;
-            });
-        }
+    function renderProducts(list) {
+      if (!productsDiv) return;
+      productsDiv.innerHTML = "";
 
-        function filterProducts() {
-            const searchInput = document.getElementById("search");
-            const categorySelect = document.getElementById("category");
-            if (!searchInput || !categorySelect) return;
+      if (list.length === 0) {
+        productsDiv.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; padding: 50px; color: #dc3545;">No products found matching your criteria.</p>`;
+        return;
+      }
 
-            const search = searchInput.value.toLowerCase().trim();
-            const category = categorySelect.value;
+      list.forEach(p => {
+        const isDiscounted = p.originalPrice && p.originalPrice > p.price;
 
-            const filtered = products.filter(p => {
-                const matchesSearch = p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search);
-                const isDiscounted = p.originalPrice && p.originalPrice > p.price;
+        const priceHtml = isDiscounted
+          ? `<span class="original-price">${p.originalPrice}$</span><span class="current-price">${p.price}$</span>`
+          : `<span class="current-price">${p.price}$</span>`;
 
-                if (category === "Discount") return matchesSearch && isDiscounted;
-                return matchesSearch && (category === "" || p.category === category);
-            });
+        const detailsHtml = `<a class="details-link" href="${p.detailsPage || `asset.html?id=${p.id}`}">View features</a>`;
 
-            renderProducts(filtered);
-        }
+        const imgHtml = p.img
+          ? `<img src="${p.img}" alt="${p.name}" onerror="this.remove(); this.parentElement.innerHTML='<div class=\\'img-fallback\\'>${p.name} Image</div>';">`
+          : `<div class="img-fallback">${p.name} Image</div>`;
 
-        function addToCart(id) {
-            const cart = getCart();
-            const productToAdd = products.find(p => p.id === id);
+        productsDiv.innerHTML += `
+          <div class="card">
+            <div class="card-image">${imgHtml}</div>
+            <h4>${p.name}</h4>
+            <p>Category: ${p.category}</p>
+            <div class="price-container">${priceHtml}</div>
 
-            if (productToAdd) {
-                cart.push(productToAdd);
-                setCart(cart);
-                showMessage(`Added ${productToAdd.name} to cart!`, 'success');
-            } else {
-                showMessage("Error: Product not found.", 'error');
-            }
-        }
+            <button onclick="addToCart(${p.id})">
+              <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById("year").textContent = new Date().getFullYear();
+            ${detailsHtml}
+          </div>
+        `;
+      });
+    }
 
-            renderProducts(products);
-            updateCartBadge();
-            updateLoginUI();
+    function filterProducts() {
+      const searchInput = document.getElementById("search");
+      const categorySelect = document.getElementById("category");
+      if (!searchInput || !categorySelect) return;
 
-            document.getElementById("search")?.addEventListener("input", filterProducts);
-            document.getElementById("category")?.addEventListener("change", filterProducts);
-        });
+      const search = searchInput.value.toLowerCase().trim();
+      const category = categorySelect.value;
 
-        window.addEventListener("focus", () => {
-            updateCartBadge();
-            updateLoginUI();
-        });
+      const filtered = products.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search);
+        const isDiscounted = p.originalPrice && p.originalPrice > p.price;
 
-        /* ================= USER AUTH DISPLAY ================= */
-        document.addEventListener("DOMContentLoaded", () => {
-            const user = JSON.parse(localStorage.getItem("currentUser"));
-            const loginLink = document.querySelector(".nav-sign-in span");
-            const loginAnchor = document.querySelector(".nav-sign-in");
-        
-            if (user && loginLink) {
-                // Show username/email instead of Login
-                loginLink.innerText = user.email;
-        
-                // Optional: go to profile page instead of auth
-                loginAnchor.href = "profile.html";
-            }
-        });
+        if (category === "Discount") return matchesSearch && isDiscounted;
+        return matchesSearch && (category === "" || p.category === category);
+      });
 
-    </script>
+      renderProducts(filtered);
+    }
+
+    function addToCart(id) {
+      const cart = getCart();
+      const productToAdd = products.find(p => p.id === id);
+
+      if (productToAdd) {
+        cart.push(productToAdd);
+        setCart(cart);
+        showMessage(`Added ${productToAdd.name} to cart!`, 'success');
+      } else {
+        showMessage("Error: Product not found.", 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById("year").textContent = new Date().getFullYear();
+      renderProducts(products);
+      updateCartBadge();
+      updateLoginUI();
+
+      document.getElementById("search")?.addEventListener("input", filterProducts);
+      document.getElementById("category")?.addEventListener("change", filterProducts);
+    });
+
+    window.addEventListener("focus", () => {
+      updateCartBadge();
+      updateLoginUI();
+    });
+  </script>
 </body>
 </html>

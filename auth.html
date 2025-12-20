@@ -23,7 +23,6 @@ body {
   justify-content: center;
 }
 
-/* ===== MAIN CARD ===== */
 .auth-container {
   display: flex;
   width: 900px;
@@ -34,7 +33,6 @@ body {
   overflow: hidden;
 }
 
-/* ===== LEFT SIDE ===== */
 .auth-left {
   flex: 1;
   padding: 50px;
@@ -62,7 +60,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* ===== RIGHT SIDE ===== */
 .auth-right {
   flex: 1;
   background: white;
@@ -113,7 +110,6 @@ body {
   font-weight: 600;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .auth-container {
     flex-direction: column;
@@ -130,7 +126,6 @@ body {
 
 <div class="auth-container">
 
-  <!-- LEFT MARKETING SECTION -->
   <div class="auth-left">
     <div class="brand">Byte.</div>
     <h1>Fast, Smart & Secure Marketplace</h1>
@@ -140,11 +135,9 @@ body {
     </p>
   </div>
 
-  <!-- RIGHT AUTH SECTION -->
   <div class="auth-right">
     <h2 id="title">Sign Up</h2>
 
-    <!-- Sign Up fields (hidden on Login) -->
     <input type="text" id="firstName" placeholder="First Name">
     <input type="text" id="lastName" placeholder="Last Name">
 
@@ -171,7 +164,6 @@ function toggleAuth() {
   document.getElementById("title").innerText = isSignup ? "Sign Up" : "Sign In";
   document.getElementById("btn").innerText = isSignup ? "Sign Up" : "Sign In";
 
-  // Show/hide sign-up-only fields
   document.getElementById("firstName").style.display = isSignup ? "block" : "none";
   document.getElementById("lastName").style.display = isSignup ? "block" : "none";
   document.getElementById("repeat").style.display = isSignup ? "block" : "none";
@@ -190,19 +182,16 @@ function submitAuth() {
   const password  = document.getElementById("password").value.trim();
   const repeat    = document.getElementById("repeat").value.trim();
 
-  // ===== Validation =====
   if (!email || !password || (isSignup && (!firstName || !lastName || !repeat))) {
     alert("Please fill all fields");
     return;
   }
 
-  // Gmail/email must contain "@"
   if (!email.includes("@")) {
     alert("Email must contain @");
     return;
   }
 
-  // Password must be at least 6 chars
   if (password.length < 6) {
     alert("Password must be at least 6 characters");
     return;
@@ -210,7 +199,6 @@ function submitAuth() {
 
   let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  // ===== SIGN UP =====
   if (isSignup) {
     if (password !== repeat) {
       alert("Passwords do not match");
@@ -229,14 +217,11 @@ function submitAuth() {
 
     alert("Account created successfully. Please Sign In.");
 
-    // Switch to login, keep design
     toggleAuth();
 
-    // clear repeat field
     document.getElementById("repeat").value = "";
   }
 
-  // ===== LOGIN =====
   else {
     const user = users.find(u =>
       u.email.toLowerCase() === email.toLowerCase() && u.password === password
@@ -247,7 +232,6 @@ function submitAuth() {
       return;
     }
 
-    // IMPORTANT: both values for your site logic
     localStorage.setItem("currentUser", JSON.stringify(user));
     localStorage.setItem("logged", "true");
 
