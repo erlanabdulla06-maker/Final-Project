@@ -1,16 +1,343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Profile</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - Byte.</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #eef4ff; min-height: 100vh;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+.profile-header {
+    background: white; padding: 30px; border-radius: 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.profile-header h1 { font-size: 32px; color: #0288d1; }
+.logout-btn {
+    background: #dc2626; color: white; border: none; padding: 12px 24px;
+    border-radius: 12px; cursor: pointer; font-weight: 600;
+}
+
+.profile-section { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
+.profile-section h2 { font-size: 24px; color: #0288d1; margin-bottom: 20px; display: flex; align-items: center; gap:10px; }
+.profile-field { margin-bottom: 15px; font-size: 16px; }
+.profile-field input, .profile-field select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; }
+
+.save-btn { background: #0288d1; color: white; border: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+
+.cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; gap: 12px; }
+.cart-item:last-child { border-bottom: none; }
+.cart-item-name { font-weight: 600; }
+.cart-item-actions button { background: #dc2626; border: none; padding: 6px 12px; border-radius: 8px; color: white; cursor: pointer; }
+
+.order-box{
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+    background: #f9fbff;
+}
+.order-top{
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.order-id{
+    font-weight: 800;
+    color: #0f172a;
+}
+.order-meta{
+    color: rgba(0,0,0,0.55);
+    font-size: 13px;
+    margin-top: 4px;
+}
+.order-total{
+    font-weight: 900;
+    color: #0288d1;
+    font-size: 18px;
+    white-space: nowrap;
+}
+.order-items{
+    font-size: 14px;
+    color: rgba(0,0,0,0.75);
+    line-height: 1.55;
+}
+.order-items b{
+    color:#0288d1;
+}
+
+#message-box {
+    position: fixed; top: 30px; right: 30px;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
+    border: 1px solid rgba(0,0,0,0.2); color: #333; padding: 15px 20px;
+    border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    opacity: 0; transform: translateX(400px); transition: all 0.5s ease;
+    display:flex; align-items:center; gap:10px;
+}
+#message-box.show { opacity:1; transform: translateX(0);}
+#message-box.error { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); color: #991b1b; }
+#message-box i { font-size: 18px; }
+</style>
 </head>
 <body>
 
-<h2>Profile</h2>
-<p id="userEmail"></p>
-<button onclick="logout()">Logout</button>
+<div id="message-box"></div>
 
-<script src="script.js"></script>
+<div class="container">
+
+    <div class="profile-header">
+        <h1><i class="fas fa-user-circle"></i> Your Profile</h1>
+        <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="profile-section">
+        <h2><i class="fas fa-info-circle"></i> Personal Information</h2>
+        <div class="profile-field">
+            <label>First Name</label>
+            <input type="text" id="firstName">
+        </div>
+        <div class="profile-field">
+            <label>Last Name</label>
+            <input type="text" id="lastName">
+        </div>
+        <div class="profile-field">
+            <label>Email</label>
+            <input type="email" id="email" disabled>
+        </div>
+        <div class="profile-field">
+            <label>Phone Number</label>
+            <input type="tel" id="phone" placeholder="+7 ___ ___ __ __">
+        </div>
+
+        <button class="save-btn" id="save-profile-btn">Save Changes</button>
+    </div>
+
+    <div class="profile-section">
+        <h2><i class="fas fa-shipping-fast"></i> Delivery Settings</h2>
+        <div class="profile-field">
+            <label>Delivery Address</label>
+            <input type="text" id="delivery-address">
+        </div>
+        <div class="profile-field">
+            <label>Delivery Time</label>
+            <select id="delivery-time"></select>
+        </div>
+        <button class="save-btn" id="save-delivery-btn">Save Delivery</button>
+    </div>
+
+    <div class="profile-section">
+        <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+        <div id="profile-cart-container"></div>
+    </div>
+
+    <!-- ✅ ORDER HISTORY -->
+    <div class="profile-section">
+        <h2><i class="fas fa-box"></i> Order History</h2>
+        <div id="orders-container"></div>
+    </div>
+
+</div>
+
+<script>
+let user = JSON.parse(localStorage.getItem("currentUser"));
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let delivery = JSON.parse(localStorage.getItem("delivery")) || { address:"", time:"20:00-22:00" };
+
+if(!user) window.location.href = "auth.html";
+
+// Message box
+function showMessage(msg, type='success'){
+    const icon = type==='success'?'fa-check-circle':'fa-exclamation-circle';
+    $("#message-box")
+        .removeClass("error")
+        .addClass(type==='error'?'error':'')
+        .html(`<i class="fas ${icon}"></i><span>${msg}</span>`)
+        .addClass("show");
+    setTimeout(()=>$("#message-box").removeClass("show"),3000);
+}
+
+// Phone auto-format: +7 XXX XXX XX XX
+function formatKzPhone(value){
+    let digits = value.replace(/\D/g, "");
+
+    // Accept: 7XXXXXXXXXX or 8XXXXXXXXXX or XXXXXXXXXX
+    if (digits.startsWith("8")) digits = "7" + digits.slice(1);
+    if (!digits.startsWith("7")) digits = "7" + digits;
+    digits = digits.slice(0, 11);
+
+    const p = digits.slice(1); // after 7
+    const a = p.slice(0,3);
+    const b = p.slice(3,6);
+    const c = p.slice(6,8);
+    const d = p.slice(8,10);
+
+    let out = "+7";
+    if (a) out += " " + a;
+    if (b) out += " " + b;
+    if (c) out += " " + c;
+    if (d) out += " " + d;
+
+    return out;
+}
+
+function isValidKzPhone(phone){
+    return /^\+7\s\d{3}\s\d{3}\s\d{2}\s\d{2}$/.test(phone);
+}
+
+// Populate user info
+$("#firstName").val(user.firstName || "");
+$("#lastName").val(user.lastName || "");
+$("#email").val(user.email || "");
+$("#phone").val(user.phone || "");
+
+// Phone input behavior
+$("#phone").on("input", function(){
+    const formatted = formatKzPhone($(this).val());
+    $(this).val(formatted);
+});
+
+// Populate delivery info
+$("#delivery-address").val(delivery.address || "");
+const times = ["10:00-12:00","12:00-14:00","14:00-16:00","16:00-18:00","18:00-20:00","20:00-22:00"];
+$("#delivery-time").html(times.map(t=>`<option value="${t}" ${t===delivery.time?'selected':''}>${t}</option>`).join(""));
+
+// Save profile
+$("#save-profile-btn").click(()=>{
+    const first = $("#firstName").val().trim();
+    const last  = $("#lastName").val().trim();
+    const phone = $("#phone").val().trim();
+
+    if (!first || !last){
+        showMessage("Please enter First Name and Last Name.", "error");
+        return;
+    }
+
+    if (phone && !isValidKzPhone(phone)){
+        showMessage("Phone format must be: +7 777 777 77 77", "error");
+        return;
+    }
+
+    user.firstName = first;
+    user.lastName = last;
+    user.phone = phone;
+
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    showMessage("Profile updated successfully!");
+});
+
+// Save delivery
+$("#save-delivery-btn").click(()=>{
+    delivery.address = $("#delivery-address").val().trim();
+    delivery.time = $("#delivery-time").val();
+    localStorage.setItem("delivery", JSON.stringify(delivery));
+    showMessage("Delivery settings saved!");
+});
+
+// Logout
+$("#logout-btn").click(()=>{
+    localStorage.removeItem("currentUser");
+    localStorage.setItem("logged","false");
+    showMessage("Logged out successfully.");
+    setTimeout(()=>{window.location.href="auth.html";},1000);
+});
+
+// Render cart
+function renderProfileCart(){
+    const container = $("#profile-cart-container");
+    cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if(cart.length===0){
+        container.html("<p>Your cart is empty.</p>");
+        return;
+    }
+
+    let html="";
+    cart.forEach((p,i)=>{
+        html+=`<div class="cart-item">
+            <span class="cart-item-name">${p.name}</span>
+            <span class="cart-item-actions">
+                <button data-index="${i}" class="remove-btn"><i class="fas fa-trash-alt"></i></button>
+            </span>
+        </div>`;
+    });
+    container.html(html);
+
+    $(".remove-btn").off("click").on("click",function(){
+        const idx = $(this).data("index");
+        cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const removed = cart.splice(idx,1)[0];
+        localStorage.setItem("cart", JSON.stringify(cart));
+        showMessage(`${removed?.name || "Item"} removed from cart.`);
+        renderProfileCart();
+    });
+}
+
+// ✅ Render orders
+function renderOrders(){
+    const container = $("#orders-container");
+    const ordersKey = `orders_${user.email}`;
+    const orders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+
+    if (orders.length === 0){
+        container.html("<p>No orders yet.</p>");
+        return;
+    }
+
+    // Latest first
+    const list = [...orders].reverse();
+
+    let html = "";
+    list.forEach(order => {
+        // Group identical items inside order
+        const grouped = new Map();
+        (order.items || []).forEach(p=>{
+            const key = (p.id != null) ? `id:${p.id}` : `k:${p.name}|${p.category}|${p.price}`;
+            if (!grouped.has(key)) grouped.set(key, { ...p, qty: 1 });
+            else grouped.get(key).qty += 1;
+        });
+
+        let itemsText = "";
+        grouped.forEach(it=>{
+            itemsText += `${it.name} <b>x${it.qty}</b><br>`;
+        });
+
+        html += `
+            <div class="order-box">
+                <div class="order-top">
+                    <div>
+                        <div class="order-id">Order #${order.id}</div>
+                        <div class="order-meta">${order.date || ""}</div>
+                        <div class="order-meta">
+                            <i class="fas fa-location-dot"></i>
+                            ${order.delivery?.address ? order.delivery.address : "No address"}
+                            • ${order.delivery?.time || ""}
+                        </div>
+                    </div>
+                    <div class="order-total">$${Number(order.total || 0).toFixed(2)}</div>
+                </div>
+                <div class="order-items">${itemsText}</div>
+            </div>
+        `;
+    });
+
+    container.html(html);
+}
+
+$(document).ready(()=>{
+    renderProfileCart();
+    renderOrders();
+});
+</script>
 </body>
 </html>

@@ -167,16 +167,11 @@
 
         .empty-cart i {
             font-size: 120px;
-            color: #0288d1; /* Голубой вместо градиента */
+            color: #0288d1;
             margin-bottom: 30px;
-            animation: float 3s ease-in-out infinite;
-            display: inline-block;
+            animation: none; /* 🔥 STOP movement */
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
 
         .empty-cart h2 {
             font-size: 32px;
@@ -668,303 +663,353 @@
 </div>
 
 <script>
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let discount = 0;
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let discount = 0;
 
-    // Delivery state (saved in LocalStorage)
-    let delivery = JSON.parse(localStorage.getItem("delivery")) || {
-        address: "",
-        time: "20:00-22:00"
+// Delivery state
+let delivery = JSON.parse(localStorage.getItem("delivery")) || {
+    address: "",
+    time: "20:00-22:00"
+};
+
+function isUserLoggedIn() {
+    const logged = localStorage.getItem("logged") === "true";
+    const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
+    return logged || !!currentUser;
+}
+
+function getCurrentUser(){
+    return JSON.parse(localStorage.getItem("currentUser") || "null");
+}
+
+// ✅ Save order for current user
+function saveOrder(cartItems, deliveryData, total) {
+    const user = getCurrentUser();
+    if (!user) return null;
+
+    const ordersKey = `orders_${user.email}`;
+    const orders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+
+    const order = {
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        items: cartItems,
+        delivery: deliveryData,
+        total
     };
 
-    function isUserLoggedIn() {
-        const logged = localStorage.getItem("logged") === "true"; // old system
-        const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null"); // new system
-        return logged || !!currentUser;
-    }
+    orders.push(order);
+    localStorage.setItem(ordersKey, JSON.stringify(orders));
 
-    function showMessage(message, type = 'success') {
-        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-        $("#message-box")
-            .removeClass("error")
-            .addClass(type === 'error' ? 'error' : '')
-            .html(`<i class="fas ${icon}"></i><span>${message}</span>`)
-            .addClass("show");
-        setTimeout(() => $("#message-box").removeClass("show"), 3000);
-    }
+    // ✅ last order reference for cart page UI
+    localStorage.setItem(`last_order_${user.email}`, JSON.stringify(order));
 
-    // (Optional) Only works if you have these elements on other pages
-    function updateCartBadge() {
-        const badge = $("#cart-badge");
-        if (!badge.length) return;
-        badge.text(cart.length);
-        badge.toggle(cart.length > 0);
-    }
+    return order;
+}
 
-    function calculateTotal() {
+function showMessage(message, type = 'success') {
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+    $("#message-box")
+        .removeClass("error")
+        .addClass(type === 'error' ? 'error' : '')
+        .html(`<i class="fas ${icon}"></i><span>${message}</span>`)
+        .addClass("show");
+    setTimeout(() => $("#message-box").removeClass("show"), 3000);
+}
+
+function updateCartBadge() {
+    const badge = $("#cart-badge");
+    if (!badge.length) return;
+    badge.text(cart.length);
+    badge.toggle(cart.length > 0);
+}
+
+function calculateTotal() {
     const subtotal = cart.reduce((sum, p) => sum + (Number(p.price) || 0), 0);
     const discountedTotal = subtotal * (1 - discount / 100);
     return { subtotal, discountedTotal };
-    }
+}
 
+function renderLastOrderBlock(){
+    const user = getCurrentUser();
+    if (!user) return "";
 
-    function renderCart() {
-        $("#items-count").text(`${cart.length} item${cart.length !== 1 ? 's' : ''}`);
-        updateCartBadge();
+    const last = JSON.parse(localStorage.getItem(`last_order_${user.email}`) || "null");
+    if (!last) return "";
 
-        const cartContainer = $("#cart-items-container");
-        const summaryContainer = $("#cart-summary-container");
+    return `
+        <div class="empty-cart" style="margin-top:20px;">
+            <i class="fas fa-box"></i>
+            <h2>Your last order</h2>
+            <p>
+              Order #${last.id}<br>
+              ${last.date}<br><br>
+              <b>Total:</b> $${Number(last.total || 0).toFixed(2)}<br>
+              <b>Delivery:</b> ${last.delivery?.time || ""}<br>
+              <b>Address:</b> ${last.delivery?.address || ""}
+            </p>
+            <a href="profile.html" class="shop-btn">
+                <i class="fas fa-user"></i> View in Profile
+            </a>
+        </div>
+    `;
+}
 
-        if (cart.length === 0) {
-            discount = 0;
-            cartContainer.html(`
-                <div class="empty-cart">
-                    <i class="fas fa-shopping-bag"></i>
-                    <h2>Your cart is empty</h2>
-                    <p>Discover amazing products and start shopping!</p>
-                    <a href="index.html" class="shop-btn">
-                        <i class="fas fa-sparkles"></i> Start Shopping
-                    </a>
-                </div>
-            `);
-            summaryContainer.empty();
-            return;
-        }
+function renderCart() {
+    $("#items-count").text(`${cart.length} item${cart.length !== 1 ? 's' : ''}`);
+    updateCartBadge();
 
-        // Items list
-        let itemsHTML = '';
-        cart.forEach((product, index) => {
-            const cat = (product.category || "").toLowerCase();
-            let icon = "fa-box";
-            if (cat.includes("laptop")) icon = "fa-laptop";
-            else if (cat.includes("phone")) icon = "fa-mobile-alt";
-            else if (cat.includes("tablet")) icon = "fa-tablet-alt";
-            else if (cat.includes("monitor")) icon = "fa-desktop";
-            else if (cat.includes("head")) icon = "fa-headphones";
-            else if (cat.includes("console")) icon = "fa-gamepad";
-            else if (cat.includes("mouse")) icon = "fa-computer-mouse";
-            else if (cat.includes("keyboard")) icon = "fa-keyboard";
-            else if (cat.includes("watch")) icon = "fa-clock";
+    const cartContainer = $("#cart-items-container");
+    const summaryContainer = $("#cart-summary-container");
 
-            itemsHTML += `
-                <div class="cart-item" style="animation-delay: ${index * 0.1}s">
-                    <div class="item-image"><i class="fas ${icon}"></i></div>
-                    <div class="item-details">
-                        <div class="item-name">${product.name}</div>
-                        <span class="item-category"><i class="fas fa-tag"></i> ${product.category}</span>
-                    </div>
-                    <div class="item-actions">
-                        <div class="item-price">$${Number(product.price).toFixed(2)}</div>
-                        <button class="remove-btn" data-index="${index}">
-                            <i class="fas fa-trash-alt"></i> Remove
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        cartContainer.html(itemsHTML);
-
-        // Summary rows
-        const { subtotal, discountedTotal } = calculateTotal();
-
-        // ===== GROUP IDENTICAL ITEMS IN SUMMARY =====
-
-        const grouped = new Map();
-        cart.forEach(p => {
-            const key = (p.id != null)
-                ? `id:${p.id}`
-                : `k:${p.name}|${p.category}|${p.price}`;
-        
-            if (!grouped.has(key)) {
-                grouped.set(key, { ...p, qty: 1 });
-            } else {
-                grouped.get(key).qty += 1;
-            }
-        });
-        
-        let summaryItemsHTML = '';
-        grouped.forEach(item => {
-            const unit = Number(item.price) || 0;
-            const lineTotal = unit * item.qty * (1 - discount / 100);
-        
-            summaryItemsHTML += `
-                <div class="summary-row">
-                    <span>${item.name} <b style="color:#0288d1;">x${item.qty}</b></span>
-                    <span class="amount">$${lineTotal.toFixed(2)}</span>
-                </div>
-            `;
-        });
-        
-        let discountRow = '';
-        if (discount > 0) {
-            discountRow = `
-                <div class="summary-row" style="color: #38ef7d;">
-                    <span>Discount (${discount}%)</span>
-                    <span class="amount">-$${(subtotal - discountedTotal).toFixed(2)}</span>
-                </div>
-            `;
-        }
-
-        // Delivery UI (saved)
-        summaryContainer.html(`
-            <div class="cart-summary">
-                <div class="summary-title">
-                    <i class="fas fa-receipt"></i>
-                    <span>Order Summary</span>
-                </div>
-
-                ${summaryItemsHTML}
-                ${discountRow}
-
-                <div class="summary-row total" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(0, 0, 0, 0.15);">
-                    <span>Total</span>
-                    <span class="amount">$${discountedTotal.toFixed(2)}</span>
-                </div>
-
-                <!-- DELIVERY -->
-                <div class="promo-section" style="margin-top: 22px;">
-                    <div class="summary-title" style="font-size:18px; margin-bottom: 14px;">
-                        <i class="fas fa-truck"></i>
-                        <span>Delivery</span>
-                    </div>
-
-                    <div style="display:flex; flex-direction:column; gap:10px;">
-                        <input type="text" id="delivery-address" class="promo-input"
-                               placeholder="Enter delivery address"
-                               value="${escapeHtml(delivery.address)}">
-
-                        <select id="delivery-time" class="promo-input" style="cursor:pointer;">
-                            ${renderTimeOptions(delivery.time)}
-                        </select>
-
-                        <div style="color: rgba(0,0,0,0.55); font-size: 13px;">
-                            We’ll deliver to your address within the selected time window.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PROMO -->
-                <div class="promo-section" style="margin-top: 22px;">
-                    <div class="promo-input-wrapper">
-                        <input type="text" id="promo-input" class="promo-input" placeholder="Enter promo code">
-                        <button id="promo-btn" class="promo-btn">Apply</button>
-                    </div>
-                    ${discount > 0 ? '<div style="margin-top: 10px; color: #38ef7d; font-weight: 600;">✓ Promo code applied!</div>' : ''}
-                </div>
-
-                <button class="checkout-btn" id="checkout-btn">
-                    <span><i class="fas fa-lock"></i> Secure Checkout</span>
-                </button>
-                <button class="clear-cart-btn" id="clear-cart-btn">
-                    <i class="fas fa-trash-alt"></i> Clear Cart
-                </button>
+    if (cart.length === 0) {
+        discount = 0;
+        cartContainer.html(`
+            <div class="empty-cart">
+                <i class="fas fa-shopping-bag"></i>
+                <h2>Your cart is empty</h2>
+                <p>Discover amazing products and start shopping!</p>
+                <a href="index.html" class="shop-btn">
+                    <i class="fas fa-sparkles"></i> Start Shopping
+                </a>
             </div>
+            ${renderLastOrderBlock()}
         `);
-
-        // Bind events
-        $(".remove-btn").off("click").on("click", function() {
-            const index = $(this).data("index");
-            removeFromCart(index);
-        });
-
-        $("#promo-btn").off("click").on("click", applyPromo);
-        $("#checkout-btn").off("click").on("click", checkout);
-        $("#clear-cart-btn").off("click").on("click", clearCart);
-
-        $("#promo-input").off("keydown").on("keydown", function(e) {
-            if (e.key === "Enter") applyPromo();
-        });
-
-        // Delivery save events (LocalStorage)
-        $("#delivery-address").off("input").on("input", function(){
-            delivery.address = $(this).val();
-            localStorage.setItem("delivery", JSON.stringify(delivery));
-        });
-
-        $("#delivery-time").off("change").on("change", function(){
-            delivery.time = $(this).val();
-            localStorage.setItem("delivery", JSON.stringify(delivery));
-        });
+        summaryContainer.empty();
+        return;
     }
 
-    // Promo codes: PROMO20 and BYTE => 20%
-    function applyPromo() {
-        const code = $("#promo-input").val().trim().toLowerCase();
-        if (!code) return;
+    // Items list
+    let itemsHTML = '';
+    cart.forEach((product, index) => {
+        const cat = (product.category || "").toLowerCase();
+        let icon = "fa-box";
+        if (cat.includes("laptop")) icon = "fa-laptop";
+        else if (cat.includes("phone")) icon = "fa-mobile-alt";
+        else if (cat.includes("tablet")) icon = "fa-tablet-alt";
+        else if (cat.includes("monitor")) icon = "fa-desktop";
+        else if (cat.includes("head")) icon = "fa-headphones";
+        else if (cat.includes("console")) icon = "fa-gamepad";
+        else if (cat.includes("mouse")) icon = "fa-computer-mouse";
+        else if (cat.includes("keyboard")) icon = "fa-keyboard";
+        else if (cat.includes("watch")) icon = "fa-clock";
 
-        if (code === "promo20" || code === "byte") {
-            discount = 20;
-            showMessage("Promo code applied! 20% discount activated.", "success");
-        } else {
-            showMessage("Invalid promo code.", "error");
-            return;
-        }
-
-        $("#promo-input").val("");
-        renderCart();
-    }
-
-    function removeFromCart(index) {
-        const removed = cart[index];
-        cart.splice(index, 1);
-        localStorage.setItem("cart", JSON.stringify(cart));
-        showMessage(`${removed?.name || "Item"} removed from cart. 🛒`, 'success');
-        renderCart();
-    }
-
-    function clearCart() {
-        if (confirm("Are you sure you want to clear the cart?")) {
-            cart = [];
-            discount = 0;
-            localStorage.setItem("cart", JSON.stringify(cart));
-            showMessage("Cart cleared. 🗑️", 'success');
-            renderCart();
-        }
-    }
-
-    function checkout() {
-        // ✅ IMPORTANT: re-check login at click time (not only when page loads)
-        if (!isUserLoggedIn()) {
-            showMessage("Please log in to proceed with checkout.", 'error');
-            setTimeout(() => { window.location.href = "auth.html"; }, 1500);
-            return;
-        }
-
-        // Delivery validation
-        delivery = JSON.parse(localStorage.getItem("delivery") || "null") || delivery;
-        if (!delivery.address || delivery.address.trim().length < 5) {
-            showMessage("Please enter a delivery address.", "error");
-            return;
-        }
-
-        showMessage(`Checkout successful! Delivery: ${delivery.time} 🚚`, 'success');
-
-        setTimeout(() => {
-            cart = [];
-            discount = 0;
-            localStorage.setItem("cart", JSON.stringify(cart));
-            renderCart();
-        }, 2000);
-    }
-
-    // Helpers
-    function renderTimeOptions(selected) {
-        const options = ["10:00-12:00","12:00-14:00","14:00-16:00","16:00-18:00","18:00-20:00","20:00-22:00"];
-        return options.map(t => `<option value="${t}" ${t===selected?"selected":""}>${t}</option>`).join("");
-    }
-
-    function escapeHtml(str) {
-        return String(str || "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-    }
-
-    $(document).ready(function() {
-        renderCart();
+        itemsHTML += `
+            <div class="cart-item" style="animation-delay: ${index * 0.1}s">
+                <div class="item-image"><i class="fas ${icon}"></i></div>
+                <div class="item-details">
+                    <div class="item-name">${product.name}</div>
+                    <span class="item-category"><i class="fas fa-tag"></i> ${product.category}</span>
+                </div>
+                <div class="item-actions">
+                    <div class="item-price">$${Number(product.price).toFixed(2)}</div>
+                    <button class="remove-btn" data-index="${index}">
+                        <i class="fas fa-trash-alt"></i> Remove
+                    </button>
+                </div>
+            </div>
+        `;
     });
+    cartContainer.html(itemsHTML);
+
+    const { subtotal, discountedTotal } = calculateTotal();
+
+    // Group identical items in summary
+    const grouped = new Map();
+    cart.forEach(p => {
+        const key = (p.id != null) ? `id:${p.id}` : `k:${p.name}|${p.category}|${p.price}`;
+        if (!grouped.has(key)) grouped.set(key, { ...p, qty: 1 });
+        else grouped.get(key).qty += 1;
+    });
+
+    let summaryItemsHTML = '';
+    grouped.forEach(item => {
+        const unit = Number(item.price) || 0;
+        const lineTotal = unit * item.qty * (1 - discount / 100);
+
+        summaryItemsHTML += `
+            <div class="summary-row">
+                <span>${item.name} <b style="color:#0288d1;">x${item.qty}</b></span>
+                <span class="amount">$${lineTotal.toFixed(2)}</span>
+            </div>
+        `;
+    });
+
+    let discountRow = '';
+    if (discount > 0) {
+        discountRow = `
+            <div class="summary-row" style="color: #38ef7d;">
+                <span>Discount (${discount}%)</span>
+                <span class="amount">-$${(subtotal - discountedTotal).toFixed(2)}</span>
+            </div>
+        `;
+    }
+
+    summaryContainer.html(`
+        <div class="cart-summary">
+            <div class="summary-title">
+                <i class="fas fa-receipt"></i>
+                <span>Order Summary</span>
+            </div>
+
+            ${summaryItemsHTML}
+            ${discountRow}
+
+            <div class="summary-row total" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(0, 0, 0, 0.15);">
+                <span>Total</span>
+                <span class="amount">$${discountedTotal.toFixed(2)}</span>
+            </div>
+
+            <!-- DELIVERY -->
+            <div class="promo-section" style="margin-top: 22px;">
+                <div class="summary-title" style="font-size:18px; margin-bottom: 14px;">
+                    <i class="fas fa-truck"></i>
+                    <span>Delivery</span>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <input type="text" id="delivery-address" class="promo-input"
+                           placeholder="Enter delivery address"
+                           value="${escapeHtml(delivery.address)}">
+
+                    <select id="delivery-time" class="promo-input" style="cursor:pointer;">
+                        ${renderTimeOptions(delivery.time)}
+                    </select>
+
+                    <div style="color: rgba(0,0,0,0.55); font-size: 13px;">
+                        We’ll deliver to your address within the selected time window.
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROMO -->
+            <div class="promo-section" style="margin-top: 22px;">
+                <div class="promo-input-wrapper">
+                    <input type="text" id="promo-input" class="promo-input" placeholder="Enter promo code">
+                    <button id="promo-btn" class="promo-btn">Apply</button>
+                </div>
+                ${discount > 0 ? '<div style="margin-top: 10px; color: #38ef7d; font-weight: 600;">✓ Promo code applied!</div>' : ''}
+            </div>
+
+            <button class="checkout-btn" id="checkout-btn">
+                <span><i class="fas fa-lock"></i> Secure Checkout</span>
+            </button>
+            <button class="clear-cart-btn" id="clear-cart-btn">
+                <i class="fas fa-trash-alt"></i> Clear Cart
+            </button>
+        </div>
+    `);
+
+    // Bind events
+    $(".remove-btn").off("click").on("click", function() {
+        const index = $(this).data("index");
+        removeFromCart(index);
+    });
+
+    $("#promo-btn").off("click").on("click", applyPromo);
+    $("#checkout-btn").off("click").on("click", checkout);
+    $("#clear-cart-btn").off("click").on("click", clearCart);
+
+    $("#promo-input").off("keydown").on("keydown", function(e) {
+        if (e.key === "Enter") applyPromo();
+    });
+
+    $("#delivery-address").off("input").on("input", function(){
+        delivery.address = $(this).val();
+        localStorage.setItem("delivery", JSON.stringify(delivery));
+    });
+
+    $("#delivery-time").off("change").on("change", function(){
+        delivery.time = $(this).val();
+        localStorage.setItem("delivery", JSON.stringify(delivery));
+    });
+}
+
+function applyPromo() {
+    const code = $("#promo-input").val().trim().toLowerCase();
+    if (!code) return;
+
+    if (code === "promo20" || code === "byte") {
+        discount = 20;
+        showMessage("Promo code applied! 20% discount activated.", "success");
+    } else {
+        showMessage("Invalid promo code.", "error");
+        return;
+    }
+
+    $("#promo-input").val("");
+    renderCart();
+}
+
+function removeFromCart(index) {
+    const removed = cart[index];
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    showMessage(`${removed?.name || "Item"} removed from cart. 🛒`, 'success');
+    renderCart();
+}
+
+function clearCart() {
+    if (confirm("Are you sure you want to clear the cart?")) {
+        cart = [];
+        discount = 0;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        showMessage("Cart cleared. 🗑️", 'success');
+        renderCart();
+    }
+}
+
+function checkout() {
+    if (!isUserLoggedIn()) {
+        showMessage("Please log in to proceed with checkout.", 'error');
+        setTimeout(() => window.location.href = "auth.html", 1500);
+        return;
+    }
+
+    delivery = JSON.parse(localStorage.getItem("delivery") || "null") || delivery;
+
+    if (!delivery.address || delivery.address.trim().length < 5) {
+        showMessage("Please enter a delivery address.", "error");
+        return;
+    }
+
+    const { discountedTotal } = calculateTotal();
+
+    const order = saveOrder(cart, delivery, discountedTotal);
+    if (!order){
+        showMessage("Could not save order. Please login again.", "error");
+        return;
+    }
+
+    showMessage("Order placed successfully! 🎉", "success");
+
+    setTimeout(() => {
+        cart = [];
+        discount = 0;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderCart();
+    }, 1500);
+}
+
+// Helpers
+function renderTimeOptions(selected) {
+    const options = ["10:00-12:00","12:00-14:00","14:00-16:00","16:00-18:00","18:00-20:00","20:00-22:00"];
+    return options.map(t => `<option value="${t}" ${t===selected?"selected":""}>${t}</option>`).join("");
+}
+
+function escapeHtml(str) {
+    return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+$(document).ready(function() {
+    renderCart();
+});
 </script>
+
 </body>
 </html>
