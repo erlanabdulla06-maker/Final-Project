@@ -573,6 +573,69 @@
             }
         }
 
+        
+        .payment-box{
+          margin-top: 22px;
+          padding-top: 20px;
+          border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .payment-title{
+          font-size:18px;
+          font-weight: 800;
+          margin-bottom: 14px;
+          display:flex;
+          align-items:center;
+          gap:10px;
+          color:#333;
+        }
+        
+        .payment-grid{
+          display:grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        
+        .payment-field{
+          display:flex;
+          flex-direction:column;
+          gap:6px;
+        }
+        
+        .payment-field label{
+          font-size: 13px;
+          font-weight: 700;
+          color: rgba(0,0,0,0.65);
+        }
+        
+        .payment-input{
+          width:100%;
+          background: rgba(255,255,255,0.85);
+          border: 1px solid rgba(0,0,0,0.2);
+          color:#111;
+          padding: 12px 14px;
+          border-radius: 12px;
+          font-size: 14px;
+          transition: all .2s ease;
+        }
+        
+        .payment-input:focus{
+          outline:none;
+          border-color:#0288d1;
+          box-shadow: 0 0 0 3px rgba(2,136,209,0.18);
+        }
+        
+        .payment-hint{
+          margin-top: 8px;
+          font-size: 12.5px;
+          color: rgba(0,0,0,0.55);
+          line-height: 1.4;
+        }
+        
+        @media (max-width: 768px){
+          .payment-grid{ grid-template-columns: 1fr; }
+        }
+        
         @media (max-width: 768px) {
             .cart-header {
                 flex-direction: column;
@@ -863,7 +926,41 @@ function renderCart() {
                     </div>
                 </div>
             </div>
-
+            
+            <!-- PAYMENT -->
+            
+            <div class="payment-box">
+              <div class="payment-title">
+                <i class="fas fa-credit-card"></i>
+                <span>Payment (Credit Card)</span>
+              </div>
+            
+              <div class="payment-grid">
+                <div class="payment-field" style="grid-column: 1 / -1;">
+                  <label>Card Number</label>
+                  <input id="card-number" class="payment-input" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456">
+                </div>
+            
+                <div class="payment-field">
+                  <label>Expiry (MM/YY)</label>
+                  <input id="card-exp" class="payment-input" inputmode="numeric" maxlength="5" placeholder="MM/YY">
+                </div>
+            
+                <div class="payment-field">
+                  <label>CVV</label>
+                  <input id="card-cvv" class="payment-input" inputmode="numeric" maxlength="4" placeholder="123">
+                </div>
+            
+                <div class="payment-field" style="grid-column: 1 / -1;">
+                  <label>Name on Card</label>
+                  <input id="card-name" class="payment-input" placeholder="JOHN DOE">
+                </div>
+              </div>
+            
+              <div class="payment-hint">
+                ⚠️ Demo checkout: we don’t store full card details. Only last 4 digits are saved in order history.
+              </div>
+            </div>
             <!-- PROMO -->
             <div class="promo-section" style="margin-top: 22px;">
                 <div class="promo-input-wrapper">
